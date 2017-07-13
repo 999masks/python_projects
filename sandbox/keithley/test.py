@@ -1,5 +1,5 @@
 import pyvisa
-import regex as re
+import re
 from collections import defaultdict
 from adb_android import adb_android
 import time
@@ -71,7 +71,9 @@ def read_configurations(config_file_name="config.txt"):
 command_set_dict = read_configurations()
 
 def initialize_adb_device():
+
     try:
+        adb_device = ""
         raw_dev_list = adb_android.devices()[1]
         dev_list = raw_dev_list.split("\n")
         #print "dev list", dev_list
@@ -86,7 +88,8 @@ def initialize_adb_device():
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "NOt immplemented yet"
 
-        global adb_device
+
+        #global adb_device
         return adb_device
     except:
         print "NO L16 CAMERA WAS FOUND"
@@ -167,21 +170,23 @@ def interactive_command_send_reciver(mi_device):
 
 def mi_command_sender(command="voltage", cycle=1):
     # TODO implemenmt execution by time and cycle
+    DC = True
     if command in "voltage":
-        volt_data = []
-        print "mi device", mi_device
-        mi_device.write("*RST")# can be combined with next command
-        print "Resseting instrument"
-        time.sleep(2)
-        mi_device.write("TRACe:MAKE 'voltMeasBuffer_1', 10000 \n")
-        time.sleep(1)
-        mi_device.write("SENSe:FUNCtion 'CURRent:AC'\n")
-        time.sleep(2)
-        # mi_device.query(":COUN %d"%cycle)
-        #mi_device.query(":READ 'voltMeasBuffer_1'\n")
-        # volt_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
-        #time.sleep(3)
-        #print "voltage buffer", votage_biuffer
+        if DC:
+            volt_data = []
+            print "mi device", mi_device
+            mi_device.write("*RST")# can be combined with next command
+            print "Resseting instrument"
+            time.sleep(1)
+            mi_device.write("TRACe:MAKE 'voltMeasBuffer_1', 10000 \n")
+            time.sleep(1)
+            mi_device.write("SENSe:FUNCtion 'CURRent:AC'\n")
+            time.sleep(2)
+            #mi_device.query(":COUN %d"%cycle)
+            mi_device.query('voltMeasBuffer_1?')
+            # volt_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
+            #time.sleep(3)
+            #print "voltage buffer", votage_biuffer
 
         #print "result buffer", result
 
