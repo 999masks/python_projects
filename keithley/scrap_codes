@@ -100,3 +100,23 @@ print "CT_item", ct_item
                         # put correct command for group execution
                         adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
                         -e 40000000")
+
+
+
+
+def command_set_finder(config_group):
+    """
+    :param config_group: is basically cnonfiguration header, EX: TEST_TYPE
+    :param command_set_dict: pass command set dictioanry
+    :return: dictionary with command header and options valuse
+    """
+    #parse command group from sets of command
+    #command_set_dict = read_configurations()
+    #print "config_group", config_group, "command_set_dict", command_set_dict
+    for command_set in command_set_dict.items():
+        #print "1, 2", conpowerfig_data[0], config_group
+        if config_group in command_set[0]:
+            #return "config data", command_set
+            break #we found our command set
+
+    return command_set

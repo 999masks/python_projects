@@ -1,5 +1,5 @@
 import pyvisa
-import regex as re
+import re
 from collections import defaultdict
 from adb_android import adb_android
 import time
@@ -40,7 +40,9 @@ command_set_dict ={'CONN_TYPE': {'CT_value': 'TCPIP'}, 'MEAUSUREMNT_TYPE': {'MT_
 '''
 
 # decided to read entire config file intead of line by line, because i would likr to separate config blocks
+
 def read_configurations(config_file_name="config.txt"):
+    #seen issue where eror accesisng dictionary which not exist
     config_set =defaultdict(dict)
     config_file_data = open(config_file_name, "r").read()
     #print "config file data", config_file_data
@@ -57,22 +59,18 @@ def read_configurations(config_file_name="config.txt"):
             match_conf_arg_value = re.search(r"=(.+)\*-#", words, re.M | re.I).group(1)
 
         if re.search(r"\*-#", words, re.M | re.I):
-
             #print "config_header", match_conf_header, "configuration argunment", match_conf_argument, "configur arg value", \
                 #match_conf_arg_value
             #to fing when configuration block stops
             #print "configs", config_head, config_value
             #match_conf_argument[match_conf_argument]
-
             config_set[match_conf_header][match_conf_argument]=match_conf_arg_value
 
-
-    #print "config set ", dict(config_set), type(config_set)
     return (dict(config_set))
 
-command_set_dict = read_configurations()
 
-def initialize_adb_device():
+
+def initialize_adb_device(command_set_dict):
     try:
         raw_dev_list = adb_android.devices()[1]
         dev_list = raw_dev_list.split("\n")
@@ -80,37 +78,23 @@ def initialize_adb_device():
         #print "command set dic", command_set_dict
         if len(dev_list) > 4:
             print "More than one ADB devices are exist"
+        #TODO add other devices
+
         for devices in dev_list:
             if command_set_dict["DUT"]["DUT_value"] == "L16":
                 if "lfc" in devices.lower():
-                    adb_device = devices.split()[0]
-                    print "l16 selected, ID:", adb_device
+                    adb_device_obj = devices.split()[0]
+                    print "l16 selected, ID:", adb_device_obj
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "NOt immplemented yet"
 
 
-        return adb_device
+        return adb_device_obj
     except:
         print "NO L16 CAMERA WAS FOUND"
 
-def command_set_finder(config_group):
-    """
-    :param config_group: is basically cnonfiguration header, EX: TEST_TYPE
-    :param command_set_dict: pass command set dictioanry
-    :return: dictionary with command header and options valuse
-    """
-    #parse command group from sets of command
-    #command_set_dict = read_configurations()
-    #print "config_group", config_group, "command_set_dict", command_set_dict
-    for command_set in command_set_dict.items():
-        #print "1, 2", conpowerfig_data[0], config_group
-        if config_group in command_set[0]:
-            #return "config data", command_set
-            break #we found our command set
 
-    return command_set
-
-def mi_resource_finder():
+def mi_resource_finder(command_set_dict):
     #TODO create device class
     #TODO add device IP ping routine, if TCPIP selected
     #resources = pyvisa.ResourceManager("@sim")
@@ -126,12 +110,8 @@ def mi_resource_finder():
             for item in res_list:
                 if phy_con in item:
                     res_loc = res_list.index(item)
-    elif mi_device == "TCPIP": # testing
-        print ("got here")
-        if "TCPIP" == phy_con:
-            for item in res_list:
-                if phy_con in item:
-                    res_loc = res_list.index(item)
+    elif mi_device == "@sim":
+        print ("We got virtual device")
     else:
         print ("No match")
     choosen_res = res_list[res_loc]
@@ -139,9 +119,12 @@ def mi_resource_finder():
     print ("Trying to connect...")
 
     try:
-
         mi_device = resources.open_resource(choosen_res)
         print "Resourse got open"
+        time.sleep(1)
+        print "Resetting the instrument"
+        mi_device.write("*RST")
+
         #print mi_device
         #print (mi_device.write(":MEASure:CURRent:AC?")), "mi_device", mi_device #_WORKS!
         # test command mi_dev.query(":SYSTem:BEEPer 500, 1")
@@ -155,7 +138,7 @@ def mi_resource_finder():
         #sys.exit()
 
 
-#mi_device = mi_resource_finder()
+
 
 def interactive_command_send_reciver(mi_device):
     while True:
@@ -167,32 +150,29 @@ def interactive_command_send_reciver(mi_device):
             command = raw_input("What you wont to send to write ? ")
             print mi_device.write(command)
 
-def mi_command_sender(command="current", cycle=1):
+
+def mi_command_sender(mi_device, mi_command):
     # TODO implemenmt execution by time and cycle
     #DC curretrnmeasurement command
     # [SENSe:[1]]:FUNCtion[:ON]...
     #print "Testing beep.."
     #mi_device.write(":SYSTem:BEEPer 280, 0.5")
-    if command in "current":
-        volt_data = []
+    if mi_command in "voltage":
         print "mi device", mi_device
-        mi_device.write("*RST")# can be combined with next command
-        print "Resseting instrument"
         time.sleep(1)
-        mi_device.write(("TRACe:MAKE '%s', 10000")%command)
+        mi_device.write(("TRACe:MAKE '%s', 10000")%mi_command)
         time.sleep(1)
-        cur_val = mi_device.query(("MEAS:DIG:VOLT? '%s'")%command)
+        cur_val = mi_device.query(("MEAS:DIG:VOLT? '%s'")%mi_command)
         cur_val = float(cur_val)/1000000
-        volt_data.append(cur_val)
-        time.sleep(2)
+
         # mi_device.query(":COUN %d"%cycle)
         #mi_device.query(":READ 'voltMeasBuffer_1'\n")
-        # volt_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
+        # meas_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
         #time.sleep(3)
         #print "voltage buffer", votage_biuffer
 
         #print "result buffer", result
-        return volt_data
+        return cur_val
 
 
 
@@ -223,10 +203,12 @@ class executor():
 
 
 
-def adb_command_former(adb_device):
+def adb_commandset_former(adb_command_set):
+
+    adb_device = initialize_adb_device()
     """
     :param adb_device: device object
-    :return: no returns
+    :return: cap_command, fi_command, keep_files
 
     """
     # add option if user want to keep captured images
@@ -237,11 +219,11 @@ def adb_command_former(adb_device):
     if adb_device:
         #first off compy lcc from /sys/etc/ to /data
         #change lcc permission
+        print "Copying lcc binary to correct spot..."
         adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
-        print "Copying lcc binary to correct spot"
-        adb_command_set = command_set_finder("CAPTURE_TYPE")
-        print "Got this", adb_command_set, "sets of commands"
-        for ct_item in adb_command_set[1].items():
+        adb_commands = adb_command_set["CAPTURE_TYPE"]
+        print "Got this", adb_commands, "sets of commands"
+        for ct_item in adb_commands[1].items():
             print "Ct item", ct_item
             if "CT_value_flash_led" in ct_item[0]:
                 if ct_item[1]=="2":
@@ -258,7 +240,7 @@ def adb_command_former(adb_device):
                 if ct_item[1] == "BC":
                     cap_command = "./lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
                     print "Wil use B,C modules", ct_item[1]
-            #TODO add other camera combinations
+            #TODO add other capture combinations
             if "CT_value_keep_files" in ct_item[0]:
                 if "YES" in ct_item[1]:
                     keep_files= True
@@ -269,36 +251,68 @@ def adb_command_former(adb_device):
         print "Cannot find any ADB device"
 
 
+def main():
+    command_set_dict = read_configurations()
+    # print command_set_dict
+
+    # Measuremetn device initialization
+    mi_device = mi_resource_finder(command_set_dict)
+    mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
+    print "Measurement instrument name is: ", mi_device
+    print "Measurement comand is: ", mi_command
+
+    # ADB device initialization
+    adb_device = initialize_adb_device(command_set_dict)
+    print "DUT name is: ", adb_device
+
+    number_of_cycles = command_set_dict["TEST_CYCLE"]["TC_value"]
+    print "We will run test %s times"%number_of_cycles
+
+    # ADB command set generation
+    cap_command, fl_command, keep_files = adb_commandset_former(command_set_dict)
+    print "Capture command is %s, flash parameter %s, keep files? %s"%(cap_command, fl_command, keep_files)
+
+    # Starting cycle here:
+    print "All set, starting to measure."
+    if len(fl_command) > 0:
+        adb_android.shell("cd /data; %s" % fl_command)
+
+    mi_device.write("*RST")
+    for i in range(number_of_cycles):
+        res_data_set = []
+        print "Runing cycle number %d" % i
+        adb_android.shell(fl_command)
+        time.sleep(1)
+        adb_android.shell(cap_command)
+        cur_res = mi_command_sender(mi_device, mi_command)
+        res_data_set.append(cur_res)
 
 
-# flash paranmetd torch, flash, no flash
-
-def adb_excuter(adb_device, command_set):
-    pass
 
 
-
-
-
+main()
 
 
 #read_configurations("config.txt")
 #initialize_adb_device()
 #print command_set_finder("CAPTURE_TYPE", read_configurations(config_file_name))
-print adb_command_former(initialize_adb_device())
-for i in range(5):
+#print adb_commandset_former(initialize_adb_device())
+#for i in range(5):
     #print mi_command_sender()
-    #adb_command_former(initialize_adb_device(), "CAPTURE_TYPE")
-    pass
-time.sleep(5)
-mi_device.close()
-print "device got closed"
+    #adb_commandset_former(initialize_adb_device(), "CAPTURE_TYPE")
+#    pass
+#time.sleep(5)
+#mi_device.close()
+#print "device got closed"
 #mi_command_sender()
 # for i in range(1, 10):
-#adb_command_former(adb_device)
+#adb_commandset_former(adb_device)
 #     print "Command is %d is runnnig"%i
 #     time.sleep(1)
 # for mi in range(1,5):
 #     mi_command_sender(mi_resource_finder())
 
 #my_dev =
+
+#if __name__== "main":
+#    main()

@@ -25,6 +25,7 @@
 #*TEST_CYCLE*#
 ###specify test cycles. Continious or 1-100 ###
 #-*TC_value=contitious*-#
+#-*TC_value=10*-#
 
 #*MEAUSUREMNT_TYPE*#
 ###specify test type. Values voltage, power, current, resistane###

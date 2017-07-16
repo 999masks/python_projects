@@ -362,14 +362,14 @@ def adb_excuter(adb_device, command_set):
 #read_configurations("config.txt")
 #initialize_adb_device()
 #print command_set_finder("CAPTURE_TYPE", read_configurations(config_file_name))
-#adb_command_former(initialize_adb_device(), "CAPTURE_TYPE")
+#adb_commandset_former(initialize_adb_device(), "CAPTURE_TYPE")
 mi_command_sender()
 time.sleep(5)
 mi_device.close()
 print "device got closed"
 #mi_command_sender()
 # for i in range(1, 10):
-#adb_command_former(adb_device)
+#adb_commandset_former(adb_device)
 #     print "Command is %d is runnnig"%i
 #     time.sleep(1)
 # for mi in range(1,5):
