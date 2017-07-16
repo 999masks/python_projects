@@ -1,0 +1,24 @@
+﻿from urllib import request
+from bs4 import BeautifulSoup
+import re
+
+web_obj = request.urlopen("http://portal.d-market.com.ua/nod32keys/208-kljuchi-obnovlenija-nod32.html")
+read_all = web_obj.read()
+web_text = str(read_all).split("b'")[1]
+#print ("WEB_text", web_text)
+
+
+new_obj =re.search("EAV.+\<br", web_text)
+print ("KEY, pass!!! ", str(new_obj).split(",")[2])
+
+#print (read_all)
+soup = BeautifulSoup(web_obj, "html.parser")
+
+#web_data = web_obj.read()
+#print (len(web_data))
+
+#formatted = soup.get_text()
+#link = formatted
+#print (link)
+encoded_text = soup.encode("utf-8")
+#print (encoded_text)
