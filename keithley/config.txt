@@ -31,7 +31,7 @@
 #-*MT_value=current*-#
 
 #*CAPTURE_TYPE*#
-###specify capture type. Values CT_value_module:A/B/C; A,B; A,C; C,B; ALL.Flash_led: "1" flash on, "2" torch on, "3" all off###
-#-*CT_value_module=ALL*-#
+###specify capture type. Values CT_value_module:A/B/C; A,B; A,C; B,C; ALL.Flash_led: "1" flash on, "2" torch on, "3" all off###
+#-*CT_value_module=BC*-#
 #-*CT_value_flash_led=1*-#
 #-*CT_value_keep_files=YES*-#

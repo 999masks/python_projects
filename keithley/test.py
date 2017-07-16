@@ -5,6 +5,8 @@ from adb_android import adb_android
 import time
 import sys
 
+#TODO verufy chain function calls, invokes
+
 #TODO implement status code reading to indicate that command succes or not
 #TODO degugging
 #TODO add logging and timestasmp
@@ -86,7 +88,7 @@ def initialize_adb_device():
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "NOt immplemented yet"
 
-        global adb_device
+
         return adb_device
     except:
         print "NO L16 CAMERA WAS FOUND"
@@ -153,7 +155,7 @@ def mi_resource_finder():
         #sys.exit()
 
 
-mi_device = mi_resource_finder()
+#mi_device = mi_resource_finder()
 
 def interactive_command_send_reciver(mi_device):
     while True:
@@ -238,113 +240,33 @@ def adb_command_former(adb_device):
         adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
         print "Copying lcc binary to correct spot"
         adb_command_set = command_set_finder("CAPTURE_TYPE")
-        print adb_command_set
+        print "Got this", adb_command_set, "sets of commands"
         for ct_item in adb_command_set[1].items():
-            print "CT_item", ct_item
-            if ct_item[0] in 'CT_value_flash_led':
-                if ct_item[1] == "1":
-                    flash = True
-                elif ct_item[1] == "2":
-                    torch = True
-                elif ct_item[1] == "3":
-                    torch, flash = False
-            if ct_item[0] in 'CAP_value_module':
-                print "ct_item1", ct_item[1]
-                if ct_item[1] in "ALL" and flash :
-                    print "Capturing all with flash"
-                    adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000")
-                elif ct_item[1] in "ALL" and torch :
-                    print "Capturing all with torch"
-                    adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000")
-                elif ct_item[1] in "ALL" and not torch and not flash:
-                    print "Capturing all no flash"
-                    adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000")
-                print "command was send"
-
-            else:
-                if len(ct_item[1])> 1:
-                    if ct_item[1] in "A,B" and flash: # fill the code instead of true
-                        # put correct command for group execution
-                        print "Capturing A,B with flash"
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] in "A,B" and torch: # fill the code instead of true
-                        # put correct command for group execution
-                        print "Capturing A,B with torch"
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] in "A,B": # No flash LED
-                        # put correct command for group execution
-                        print "Capturing A,B NO flash" #HERE
-                        #TODO find out how torch woks, youmay need to turn torch on, before iteration starts
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    if ct_item[1] in "A,C" and flash: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] in "A,C" and torch: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] in "A,C": # No flash LED
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    if ct_item[1] in "B,C" and flash: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] in "B,C" and torch: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] in "B,C": # No flash LED
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    else:
-                        print "Module group has not identified"
+            print "Ct item", ct_item
+            if "CT_value_flash_led" in ct_item[0]:
+                if ct_item[1]=="2":
+                    torch =True
+                    print "Torch will be on", ct_item[1]
+                    fl_command = "./lcc -m 0 -s 0 -w -p 00 00 54 02 02 00 00 00 00"
+                elif ct_item[1]=="1":
+                    print "Flash wiilbe on", ct_item[1]
+                    fl_command = "#./lcc -m 0 -s 0 -w -p 00 00 54 02 31 DC 05 DC 05 0A 00"
                 else:
-                    if ct_item[1] == "A" and flash: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "A" and torch: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "A": # No flash LED
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "B" and flash: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "B" and torch: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "B": # No flash LED
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "C" and flash: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "C" and torch: # fill the code instead of true
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
-                    elif ct_item[1] == "C": # No flash LED
-                        # put correct command for group execution
-                        adb_android.shell("cd data; ./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75\
-                        -e 40000000")
+                    fl_command = ""
+                    print "Flash LED wil not be used", ct_item[1]
+            if "CT_value_module" in ct_item[0]:
+                if ct_item[1] == "BC":
+                    cap_command = "./lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+                    print "Wil use B,C modules", ct_item[1]
+            #TODO add other camera combinations
+            if "CT_value_keep_files" in ct_item[0]:
+                if "YES" in ct_item[1]:
+                    keep_files= True
+                    print "We will keep the files"
+        return(cap_command, fl_command, keep_files)
 
     else:
-        "Prind cannot find any ADB device"
+        print "Cannot find any ADB device"
 
 
 
@@ -363,9 +285,11 @@ def adb_excuter(adb_device, command_set):
 #read_configurations("config.txt")
 #initialize_adb_device()
 #print command_set_finder("CAPTURE_TYPE", read_configurations(config_file_name))
-#adb_command_former(initialize_adb_device(), "CAPTURE_TYPE")
+print adb_command_former(initialize_adb_device())
 for i in range(5):
-    print mi_command_sender()
+    #print mi_command_sender()
+    #adb_command_former(initialize_adb_device(), "CAPTURE_TYPE")
+    pass
 time.sleep(5)
 mi_device.close()
 print "device got closed"
