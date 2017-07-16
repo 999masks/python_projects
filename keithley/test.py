@@ -266,7 +266,7 @@ def adb_command_former(adb_device):
         return(cap_command, fl_command, keep_files)
 
     else:
-        print "Cannot  fi nd any ADB device"
+        print "Cannot  find any ADB device"
 
 
 
