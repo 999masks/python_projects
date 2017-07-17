@@ -1,3 +1,7 @@
+####### Power measurement tes automator     #######
+####### V0.1                                #######
+####### Author Mamo                         #######
+
 import pyvisa
 import re
 from collections import defaultdict
@@ -73,6 +77,7 @@ def read_configurations(config_file_name="config.txt"):
 def initialize_adb_device(command_set_dict):
     devices_l = []
     try:
+        adb_android.start_server()
         raw_dev_list = adb_android.devices()[1]
         #print "Raw dev list", raw_dev_list
         dev_list = raw_dev_list.split("\n")
@@ -81,7 +86,6 @@ def initialize_adb_device(command_set_dict):
             if len(devs.split("\t")[0])>3:
                 devices_l.append(devs.split("\t")[0])
         print "Found this devices: ", devices_l
-        #print "command set dic", command_set_dict
         if len(devices_l) > 1:
             print "More than one ADB devices are exist"
         #TODO add other devices
@@ -101,37 +105,42 @@ def initialize_adb_device(command_set_dict):
 
         return adb_device_obj
     except:
-        raise
-        print "NO ADB DEVICE WAS FOUND"
-        return adb_device_obj
+        #raise
+        sys.exit("NO ADB DEVICE WAS FOUND. Exiting...")
+
 
 def mi_resource_finder(command_set_dict):
-    #TODO create device class
-    #TODO add device IP ping routine, if TCPIP selected
-    resources = pyvisa.ResourceManager("@sim")
-    #resources= pyvisa.ResourceManager()
+    # TODO create device class
+    # TODO add device IP ping routine, if TCPIP selected
+
+    if "sim" in command_set_dict["MEASURING_INSTRUMET"]["MI_model"]:
+        resources = pyvisa.ResourceManager("@sim")
+    else:
+        resources = pyvisa.ResourceManager()
     res_list =  resources.list_resources()
     #print "We got these resources avaliable", res_list
     mi_device = command_set_dict["MEASURING_INSTRUMET"]["MI_model"]
     phy_con = command_set_dict["CONN_TYPE"]["CT_value"]
-    print  "mi device", mi_device, "phy con", phy_con
+    print  "mi device is", (mi_device).upper(), ". Physical connection is:", phy_con
     if "DMM775" ==  mi_device:
         print "Kithley was found in confguration"
+    elif mi_device == "simulator":
+        print "We got virtual device"
+    if mi_device:
         if "TCPIP" in phy_con:
-            for item in res_list:
-                if phy_con in item:
-                    res_loc = res_list.index(item)
-    elif mi_device == "@sim":
-        print ("We got virtual device")
+                for item in res_list:
+                    if phy_con in item:
+                        res_loc = res_list.index(item)
     else:
-        print ("No match")
+        print ("measuring instrument was not recognized")
+
     choosen_res = res_list[res_loc]
-    print ("Instrument %s and %s connetion will be used." % (mi_device, choosen_res))
+    #print ("Instrument %s and %s connetion will be used." % (mi_device, choosen_res))
     print ("Trying to connect...")
 
     try:
         mi_device = resources.open_resource(choosen_res)
-        print "Resourse got open"
+        print "Resource got open"
         time.sleep(1)
         print "Resetting the instrument"
         mi_device.write("*RST")
@@ -145,7 +154,7 @@ def mi_resource_finder(command_set_dict):
         #global mi_device
         return mi_device
     except:
-        print "Measuring device is offline or command is wrong" # change to actual mi_device
+        print "Measuring instrument is offline or command is wrong" # change to actual mi_device
         #sys.exit()
 
 
@@ -214,9 +223,8 @@ class executor():
 
 
 
-def adb_commandset_former(adb_command_set):
+def adb_commandset_former(adb_command_set,adb_device):
 
-    adb_device = initialize_adb_device(adb_command_set)
     print "Got this command set", adb_command_set
     """
     :param adb_device: device object
@@ -260,7 +268,7 @@ def adb_commandset_former(adb_command_set):
         return(cap_command, fl_command, keep_files)
 
     else:
-        print "Cannot find any ADB device"
+        sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
 def main():
@@ -272,7 +280,8 @@ def main():
         mi_device = mi_resource_finder(command_set_dict)
         print "Measurement instrument name is: ", mi_device
     except:
-        sys.exit("No measurinf device was found, exiting ...")
+        #raise
+        sys.exit("%s measuring instrument was found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
 
     mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
 
@@ -290,7 +299,7 @@ def main():
     print "We will run test %s times"%number_of_cycles
 
     # ADB command set generation
-    cap_command, fl_command, keep_files = adb_commandset_former(command_set_dict)
+    cap_command, fl_command, keep_files = adb_commandset_former(command_set_dict, adb_device)
     print "Capture command is %s, flash parameter %s, keep files? %s"%(cap_command, fl_command, keep_files)
 
     # Starting cycle here:

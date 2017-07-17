@@ -21,6 +21,7 @@
 #*MEASURING_INSTRUMET*#
 ###specify measuring instruments an IP.###
 #-*MI_model=DMM775*-#
+#-*MI_model=simulator*-#
 #-*MI_IP=10.0.100.27*-#
 
 #*TEST_CYCLE*#
