@@ -71,36 +71,47 @@ def read_configurations(config_file_name="config.txt"):
 
 
 def initialize_adb_device(command_set_dict):
+    devices_l = []
     try:
         raw_dev_list = adb_android.devices()[1]
+        #print "Raw dev list", raw_dev_list
         dev_list = raw_dev_list.split("\n")
         #print "dev list", dev_list
+        for devs in dev_list[1:]:
+            if len(devs.split("\t")[0])>3:
+                devices_l.append(devs.split("\t")[0])
+        print "Found this devices: ", devices_l
         #print "command set dic", command_set_dict
-        if len(dev_list) > 4:
+        if len(devices_l) > 1:
             print "More than one ADB devices are exist"
         #TODO add other devices
-
-        for devices in dev_list:
+        for devices in devices_l:
             if command_set_dict["DUT"]["DUT_value"] == "L16":
                 if "lfc" in devices.lower():
-                    adb_device_obj = devices.split()[0]
+                    adb_device_obj = devices
                     print "l16 selected, ID:", adb_device_obj
+
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "NOt immplemented yet"
 
+            elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
+                if "emulator" in devices.lower():
+                    adb_device_obj = devices
+                    print "emulator was selected, ID:", adb_device_obj
 
         return adb_device_obj
     except:
-        print "NO L16 CAMERA WAS FOUND"
-
+        raise
+        print "NO ADB DEVICE WAS FOUND"
+        return adb_device_obj
 
 def mi_resource_finder(command_set_dict):
     #TODO create device class
     #TODO add device IP ping routine, if TCPIP selected
-    #resources = pyvisa.ResourceManager("@sim")
-    resources= pyvisa.ResourceManager()
+    resources = pyvisa.ResourceManager("@sim")
+    #resources= pyvisa.ResourceManager()
     res_list =  resources.list_resources()
-    print "We got these resources avaliable", res_list
+    #print "We got these resources avaliable", res_list
     mi_device = command_set_dict["MEASURING_INSTRUMET"]["MI_model"]
     phy_con = command_set_dict["CONN_TYPE"]["CT_value"]
     print  "mi device", mi_device, "phy con", phy_con
@@ -205,7 +216,8 @@ class executor():
 
 def adb_commandset_former(adb_command_set):
 
-    adb_device = initialize_adb_device()
+    adb_device = initialize_adb_device(adb_command_set)
+    print "Got this command set", adb_command_set
     """
     :param adb_device: device object
     :return: cap_command, fi_command, keep_files
@@ -216,7 +228,7 @@ def adb_commandset_former(adb_command_set):
     # : 'SINGLE', 'CAP_value_torch': 'ON'})
     # implement lcc check in /data/ directory
 
-    if adb_device:
+    if adb_device and adb_device is "L16":
         #first off compy lcc from /sys/etc/ to /data
         #change lcc permission
         print "Copying lcc binary to correct spot..."
@@ -256,14 +268,23 @@ def main():
     # print command_set_dict
 
     # Measuremetn device initialization
-    mi_device = mi_resource_finder(command_set_dict)
+    try:
+        mi_device = mi_resource_finder(command_set_dict)
+        print "Measurement instrument name is: ", mi_device
+    except:
+        sys.exit("No measurinf device was found, exiting ...")
+
     mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
-    print "Measurement instrument name is: ", mi_device
+
     print "Measurement comand is: ", mi_command
 
     # ADB device initialization
-    adb_device = initialize_adb_device(command_set_dict)
-    print "DUT name is: ", adb_device
+    try:
+        adb_device = initialize_adb_device(command_set_dict)
+        print "DUT name is: ", adb_device
+    except:
+        raise
+        sys.exit("No ADB device found, exiting..")
 
     number_of_cycles = command_set_dict["TEST_CYCLE"]["TC_value"]
     print "We will run test %s times"%number_of_cycles
