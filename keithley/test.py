@@ -96,7 +96,7 @@ def initialize_adb_device(command_set_dict):
                     print "l16 selected, ID:", adb_device_obj
 
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
-                print "NOt immplemented yet"
+                print "Not immplemented yet"
 
             elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
                 if "emulator" in devices.lower():
