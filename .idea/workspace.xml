@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="19c8b6d0-4b06-46ae-b52a-6555c92b98be" name="Default" comment="">
+    <list default="true" id="19c8b6d0-4b06-46ae-b52a-6555c92b98be" name="Default" comment="changed if clauses in capture type config parsing">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/keithley/config.txt" afterPath="$PROJECT_DIR$/keithley/config.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/keithley/test.py" afterPath="$PROJECT_DIR$/keithley/test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/python_projects/sandbox/keithley/test.py" afterPath="$PROJECT_DIR$/python_projects/sandbox/keithley/test.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,8 +21,8 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/keithley/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+            <state relative-caret-position="475">
+              <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
               <folding>
                 <element signature="e#398#407#0" expanded="true" />
               </folding>
@@ -449,7 +447,8 @@
     <MESSAGE value="redesigned adb run sequence_not complete" />
     <MESSAGE value="test" />
     <MESSAGE value="chnged if clauses in capture tyoe config parsing" />
-    <option name="LAST_COMMIT_MESSAGE" value="chnged if clauses in capture tyoe config parsing" />
+    <MESSAGE value="changed if clauses in capture type config parsing" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed if clauses in capture type config parsing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -491,8 +490,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/keithley/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
+        <state relative-caret-position="475">
+          <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
           <folding>
             <element signature="e#398#407#0" expanded="true" />
           </folding>
