@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="19c8b6d0-4b06-46ae-b52a-6555c92b98be" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/keithley/adbandroid/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/keithley/adbandroid/var.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/keithley/adb_android.py" afterPath="$PROJECT_DIR$/keithley/adbandroid/adb_android.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/keithley/config.txt" afterPath="$PROJECT_DIR$/keithley/config.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/keithley/test.py" afterPath="$PROJECT_DIR$/keithley/test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/python_projects/sandbox/keithley/test.py" afterPath="$PROJECT_DIR$/python_projects/sandbox/keithley/test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sandbox/keithley/test.py" afterPath="$PROJECT_DIR$/sandbox/keithley/test.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,10 +23,10 @@
       <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/keithley/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="241" column="22" lean-forward="false" selection-start-line="241" selection-start-column="22" selection-end-line="241" selection-end-column="22" />
+            <state relative-caret-position="75">
+              <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
               <folding>
-                <element signature="e#157#166#0" expanded="true" />
+                <element signature="e#398#407#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -39,8 +35,8 @@
       <file leaf-file-name="config.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/keithley/config.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="950">
-              <caret line="38" column="22" lean-forward="false" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="22" />
+            <state relative-caret-position="325">
+              <caret line="16" column="26" lean-forward="false" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -395,7 +391,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500183415297</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="chnged if clauses in capture tyoe config parsing">
+      <created>1500343846912</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1500343846912</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -445,7 +448,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="redesigned adb run sequence_not complete" />
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="chnged if clauses in capture tyoe config parsing" />
+    <option name="LAST_COMMIT_MESSAGE" value="chnged if clauses in capture tyoe config parsing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -457,7 +461,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#157#166#0" expanded="true" />
+            <element signature="e#398#407#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -479,18 +483,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/keithley/config.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="950">
-          <caret line="38" column="22" lean-forward="false" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="22" />
+        <state relative-caret-position="325">
+          <caret line="16" column="26" lean-forward="false" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/keithley/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="241" column="22" lean-forward="false" selection-start-line="241" selection-start-column="22" selection-end-line="241" selection-end-column="22" />
+        <state relative-caret-position="75">
+          <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
           <folding>
-            <element signature="e#157#166#0" expanded="true" />
+            <element signature="e#398#407#0" expanded="true" />
           </folding>
         </state>
       </provider>

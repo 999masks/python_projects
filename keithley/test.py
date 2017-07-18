@@ -1,6 +1,8 @@
-####### Power measurement tes automator     #######
-####### V0.1                                #######
-####### Author Mamo                         #######
+###### Power measurement tes automator                                  ######
+###### V0.11                                                            ######
+###### Chanages:                                                        ######
+###### 0.11 edited "IF" clauses to determine which devieces will cpature  ######
+###### Author Mamo                                                      ######
 
 import re
 import sys

@@ -14,6 +14,7 @@
 
 #*TEST_TYPE*#
 ###specify test type. Values capture_all, flash, resistane###
+### Not implemented yet###
 #-*1TT_value=capture_all*-#
 #-*2TT_value=w_flash*-#
 #-*3TT_value=soon*-#
