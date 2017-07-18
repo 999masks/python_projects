@@ -2,12 +2,15 @@
 ####### V0.1                                #######
 ####### Author Mamo                         #######
 
-import pyvisa
 import re
-from collections import defaultdict
-from adb_android import adb_android
-import time
 import sys
+import time
+from collections import defaultdict
+from adbandroid import adb_android, var
+
+import pyvisa
+
+from adb_android import adb_android
 
 #TODO verufy chain function calls, invokes
 
@@ -77,6 +80,7 @@ def read_configurations(config_file_name="config.txt"):
 def initialize_adb_device(command_set_dict):
     devices_l = []
     try:
+        #adb_android.stop_server()
         adb_android.start_server()
         raw_dev_list = adb_android.devices()[1]
         #print "Raw dev list", raw_dev_list
@@ -93,7 +97,7 @@ def initialize_adb_device(command_set_dict):
             if command_set_dict["DUT"]["DUT_value"] == "L16":
                 if "lfc" in devices.lower():
                     adb_device_obj = devices
-                    print "l16 selected, ID:", adb_device_obj
+                    #print "l16 selected, ID:", adb_device_obj
 
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "Not immplemented yet"
@@ -156,9 +160,6 @@ def mi_resource_finder(command_set_dict):
     except:
         print "Measuring instrument is offline or command is wrong" # change to actual mi_device
         #sys.exit()
-
-
-
 
 def interactive_command_send_reciver(mi_device):
     while True:
@@ -223,51 +224,57 @@ class executor():
 
 
 
-def adb_commandset_former(adb_command_set,adb_device):
+def adb_commandset_former(adb_command_set, adb_device):
 
-    print "Got this command set", adb_command_set
+    #print "Got this command set", adb_command_set, adb_device
     """
     :param adb_device: device object
     :return: cap_command, fi_command, keep_files
-
     """
     # add option if user want to keep captured images
     # command set data structure -('CAPTURE_TYPE', {'CAP_value_module': 'ALL', 'CAP_value_flash': 'ON', 'CAP_value_type'\
     # : 'SINGLE', 'CAP_value_torch': 'ON'})
     # implement lcc check in /data/ directory
 
-    if adb_device and adb_device is "L16":
+    if adb_device and "LFC" in adb_device:
         #first off compy lcc from /sys/etc/ to /data
         #change lcc permission
         print "Copying lcc binary to correct spot..."
         adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
+        print "LCC sug"
         adb_commands = adb_command_set["CAPTURE_TYPE"]
-        print "Got this", adb_commands, "sets of commands"
-        for ct_item in adb_commands[1].items():
-            print "Ct item", ct_item
+        #print "Got this", adb_commands, "sets of commands"
+        for ct_item in adb_commands.items():
             if "CT_value_flash_led" in ct_item[0]:
                 if ct_item[1]=="2":
                     torch =True
-                    print "Torch will be on", ct_item[1]
+                    print "Torch will be on. Switch possition: ", ct_item[1]
                     fl_command = "./lcc -m 0 -s 0 -w -p 00 00 54 02 02 00 00 00 00"
                 elif ct_item[1]=="1":
-                    print "Flash wiilbe on", ct_item[1]
+                    print "Flash will be on. Switch possition", ct_item[1]
                     fl_command = "#./lcc -m 0 -s 0 -w -p 00 00 54 02 31 DC 05 DC 05 0A 00"
                 else:
                     fl_command = ""
                     print "Flash LED wil not be used", ct_item[1]
             if "CT_value_module" in ct_item[0]:
-                if ct_item[1] == "BC":
+                if ct_item[1] == "ALL":
+                    cap_command = "./lcc -m 0 -s 0 -f 1 01 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+                elif ct_item[1] == "AB":
+                    cap_command = "./lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000"
+                elif ct_item[1] == "BC":
                     cap_command = "./lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
-                    print "Wil use B,C modules", ct_item[1]
-            #TODO add other capture combinations
+
+            # TODO add other capture combinations
+            # TODO add ccb reboot, off options
             if "CT_value_keep_files" in ct_item[0]:
                 if "YES" in ct_item[1]:
                     keep_files= True
                     print "We will keep the files"
+        print "We will use %s module(s) for capture" % (adb_command_set["CAPTURE_TYPE"]["CT_value_module"])
         return(cap_command, fl_command, keep_files)
 
     else:
+        raise
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
@@ -281,11 +288,11 @@ def main():
         print "Measurement instrument name is: ", mi_device
     except:
         #raise
-        sys.exit("%s measuring instrument was found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
+        sys.exit("%s measuring instrument was not found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
 
     mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
 
-    print "Measurement comand is: ", mi_command
+    print "Measurement command is: ", mi_command
 
     # ADB device initialization
     try:
@@ -308,10 +315,10 @@ def main():
         adb_android.shell("cd /data; %s" % fl_command)
 
     mi_device.write("*RST")
-    for i in range(number_of_cycles):
+    for i in range(int(number_of_cycles)):
         res_data_set = []
         print "Runing cycle number %d" % i
-        adb_android.shell(fl_command)
+        adb_android.shell("cd /data/; %s" % fl_command)
         time.sleep(1)
         adb_android.shell(cap_command)
         cur_res = mi_command_sender(mi_device, mi_command)

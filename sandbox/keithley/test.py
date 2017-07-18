@@ -1,9 +1,10 @@
-import pyvisa
 import re
-from collections import defaultdict
-from adb_android import adb_android
 import time
-import sys
+from collections import defaultdict
+
+import pyvisa
+
+from keithley.adb_android.adb_android import adb_android
 
 #TODO implement status code reading to indicate that command succes or not
 #TODO degugging

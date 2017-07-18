@@ -10,7 +10,7 @@
 #*DUT*#
 ###specify test cycles. Continious or 1-100 ###
 #-*DUT_value=L16*-#
-#-*DUT_value=emulator-5554*-#
+
 
 #*TEST_TYPE*#
 ###specify test type. Values capture_all, flash, resistane###
@@ -36,6 +36,7 @@
 
 #*CAPTURE_TYPE*#
 ###specify capture type. Values CT_value_module:A/B/C; A,B; A,C; B,C; ALL.Flash_led: "1" flash on, "2" torch on, "3" all off###
-#-*CT_value_module=BC*-#
+#-*CT_value_module=ALL*-#
 #-*CT_value_flash_led=1*-#
 #-*CT_value_keep_files=YES*-#
+#-*CT_value_ccb_reboot=YES*-#
