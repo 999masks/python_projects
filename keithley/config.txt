@@ -11,6 +11,26 @@
 ###specify test cycles. Continious or 1-100 ###
 #-*DUT_value=L16*-#
 
+#*MEASURING_INSTRUMET*#
+###specify measuring instruments an IP.###
+#-*MI_model=DMM775*-#
+#-*MI_IP=10.0.100.27*-#
+
+#*TEST_CYCLE*#
+###specify test cycles. Continious or 1-100 ###
+#-*TC_value=contitious*-#
+#-*TC_value=5*-#
+
+#*MEAUSUREMNT_TYPE*#
+###specify test type. Values voltage, power, current, resistane###
+#-*MT_value=current*-#
+
+#*CAPTURE_TYPE*#
+###specify capture type. Values CT_value_module:A/B/C; AB; AC; BC; ALL. Flash_led: "1" flash on, "2" torch on, "3" all off###
+#-*CT_value_module=ALL*-#
+#-*CT_value_flash_led=2*-#
+#-*CT_value_keep_files=YES*-#
+#-*CT_value_ccb_reboot=YES*-#
 
 #*TEST_TYPE*#
 ###specify test type. Values capture_all, flash, resistane###
@@ -18,26 +38,3 @@
 #-*1TT_value=capture_all*-#
 #-*2TT_value=w_flash*-#
 #-*3TT_value=soon*-#
-
-#*MEASURING_INSTRUMET*#
-###specify measuring instruments an IP.###
-#-*MI_model=DMM775*-#
-#-*MI_model=simulator*-#
-#-*MI_IP=10.0.100.27*-#
-
-#*TEST_CYCLE*#
-###specify test cycles. Continious or 1-100 ###
-#-*TC_value=contitious*-#
-#-*TC_value=10*-#
-
-#*MEAUSUREMNT_TYPE*#
-###specify test type. Values voltage, power, current, resistane###
-#-*MT_value=current*-#
-#-*MT_value=voltage*-#
-
-#*CAPTURE_TYPE*#
-###specify capture type. Values CT_value_module:A/B/C; A,B; A,C; B,C; ALL.Flash_led: "1" flash on, "2" torch on, "3" all off###
-#-*CT_value_module=ALL*-#
-#-*CT_value_flash_led=1*-#
-#-*CT_value_keep_files=YES*-#
-#-*CT_value_ccb_reboot=YES*-#
