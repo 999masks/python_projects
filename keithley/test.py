@@ -7,6 +7,7 @@
 import re
 import sys
 import time
+from scipy import pyplot
 from collections import defaultdict
 from adbandroid import adb_android, var
 
@@ -20,6 +21,8 @@ from adbandroid import adb_android
 #TODO degugging
 #TODO add logging and timestasmp
 #TODO lover all config string to make case insesnsitive
+# TODO do plotting after done
+# TODO add gui
 '''
 user_sel_1 =raw_input("Please choose, how you want to setup the test, Press 1 for interactive, or 2 to use config file ")
 
@@ -154,7 +157,8 @@ def mi_resource_finder(command_set_dict):
 
         #print mi_device
         #print (mi_device.write(":MEASure:CURRent:AC?")), "mi_device", mi_device #_WORKS!
-        # test command mi_dev.query(":SYSTem:BEEPer 500, 1")
+        print "Testing instrument, beeping.."
+        mi_device.write(":SYSTem:BEEPer 500, 1")
         #print (mi_device.read()), "mi_device", mi_device            _WORKS!
         #interactive_command_send_reciver(mi_device)
         #print "checking ...", mi_device
@@ -288,6 +292,7 @@ def adb_commandset_former(adb_command_set, adb_device):
 
     else:
         raise
+        mi_device.close()
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
@@ -301,7 +306,8 @@ def main():
         mi_device = mi_resource_finder(command_set_dict)
         print "Measurement instrument name is: ", mi_device
     except:
-        #raise
+        raise
+        mi_device.close()
         sys.exit("%s measuring instrument was not found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
 
     mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
