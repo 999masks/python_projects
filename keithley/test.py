@@ -1,28 +1,26 @@
 ###### Power measurement tes automator                                      ######
 ###### V0.11                                                                ######
 ###### Chanages:                                                            ######
-###### 0.11 edited "IF" clauses to determine which devieces will cpature    ######
+###### 0.13 edited "IF" clauses to determine which devieces will cpature    ######
 ###### Author Mamo                                                          ######
 
 import re
 import sys
 import time
-from scipy import pyplot
+import pyvisa
+from matplotlib import pyplot
 from collections import defaultdict
 from adbandroid import adb_android, var
 
-import pyvisa
 
-from adbandroid import adb_android
-
-#TODO verufy chain function calls, invokes
-
-#TODO implement status code reading to indicate that command succes or not
-#TODO degugging
-#TODO add logging and timestasmp
-#TODO lover all config string to make case insesnsitive
+# TODO verify chain function calls, invokes
+# TODO implement status code reading to indicate that command succes or not
+# TODO degugging
+# TODO add logging and timestasmp
+# TODO lover all config string to make case insesnsitive
 # TODO do plotting after done
 # TODO add gui
+
 '''
 user_sel_1 =raw_input("Please choose, how you want to setup the test, Press 1 for interactive, or 2 to use config file ")
 
@@ -54,33 +52,29 @@ command_set_dict ={'CONN_TYPE': {'CT_value': 'TCPIP'}, 'MEAUSUREMNT_TYPE': {'MT_
 # decided to read entire config file intead of line by line, because i would likr to separate config blocks
 
 def read_configurations(config_file_name="config.txt"):
+    """
+    :param config_file_name: is file with defined configuretions
+    :return: nested dictianary with all parsed comamnds/values
+    """
     # TODO issue with parsing flash command
     #seen issue where eror accesisng dictionary which not exist
     config_set =defaultdict(dict)
     config_file_data = open(config_file_name, "r").read()
-    #print "config file data", config_file_data
     config_data_list = config_file_data.split()
-    #print "confog data list", config_data_list
 
     ### it scans all item from confg list until gets the end of config block, as soon as het the end record value in to dictionary
     for words in config_data_list:
         if re.search(r"#\*(.+?)\*#", words):
             match_conf_header = re.search("#{1}\*(.+?)\*#{1}?", words).group(1)
-            #print "header", match_conf_header
+
         if re.search(r"#-\*.+", words, re.M | re.I):
             match_conf_argument = re.search(r"#-\*(.+)=", words, re.M | re.I).group(1)
             match_conf_arg_value = re.search(r"=(.+)\*-#", words, re.M | re.I).group(1)
 
         if re.search(r"\*-#", words, re.M | re.I):
-            #print "config_header", match_conf_header, "configuration argunment", match_conf_argument, "configur arg value", \
-                #match_conf_arg_value
-            #to fing when configuration block stops
-            #print "configs", config_head, config_value
-            #match_conf_argument[match_conf_argument]
             config_set[match_conf_header][match_conf_argument]=match_conf_arg_value
 
     return (dict(config_set))
-
 
 
 def initialize_adb_device(command_set_dict):
@@ -89,30 +83,27 @@ def initialize_adb_device(command_set_dict):
         #adbandroid.stop_server()
         adb_android.start_server()
         raw_dev_list = adb_android.devices()[1]
-        #print "Raw dev list", raw_dev_list
         dev_list = raw_dev_list.split("\n")
-        #print "dev list", dev_list
         for devs in dev_list[1:]:
             if len(devs.split("\t")[0])>3:
                 devices_l.append(devs.split("\t")[0])
         print "Found this devices: ", devices_l
+
         if len(devices_l) > 1:
             print "More than one ADB devices are exist"
-        #TODO add other devices
+
+        #TODO add other type of devices
         for devices in devices_l:
             if command_set_dict["DUT"]["DUT_value"] == "L16":
                 if "lfc" in devices.lower():
                     adb_device_obj = devices
                     #print "l16 selected, ID:", adb_device_obj
-
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "Not immplemented yet"
-
             elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
                 if "emulator" in devices.lower():
                     adb_device_obj = devices
                     print "emulator was selected, ID:", adb_device_obj
-
         return adb_device_obj
     except:
         #raise
@@ -120,18 +111,25 @@ def initialize_adb_device(command_set_dict):
 
 
 def mi_resource_finder(command_set_dict):
+    """
+    this will find any visa resources avaliable in local network conections
+    utilized VISA libraries, also Keitley isntrument management tool
+    :param command_set_dict:
+    :return: device object
+    """
     # TODO create device class
     # TODO add device IP ping routine, if TCPIP selected
+    # TODO add connection type under measuring instrument config block
+    mi_device = command_set_dict["MEASURING_INSTRUMET"]["MI_model"]
+    phy_con = command_set_dict["CONN_TYPE"]["CT_value"]
 
-    if "sim" in command_set_dict["MEASURING_INSTRUMET"]["MI_model"]:
+    if "sim" in mi_device:
         resources = pyvisa.ResourceManager("@sim")
     else:
         resources = pyvisa.ResourceManager()
     res_list =  resources.list_resources()
-    #print "We got these resources avaliable", res_list
-    mi_device = command_set_dict["MEASURING_INSTRUMET"]["MI_model"]
-    phy_con = command_set_dict["CONN_TYPE"]["CT_value"]
     print  "mi device is", (mi_device).upper(), ". Physical connection is:", phy_con
+
     if "DMM775" ==  mi_device:
         print "Kithley was found in confguration"
     elif mi_device == "simulator":
@@ -154,19 +152,13 @@ def mi_resource_finder(command_set_dict):
         time.sleep(1)
         print "Resetting the instrument"
         mi_device.write("*RST")
-
-        #print mi_device
-        #print (mi_device.write(":MEASure:CURRent:AC?")), "mi_device", mi_device #_WORKS!
-        print "Testing instrument, beeping.."
+        print "Testing the instrument, beeping.."
         mi_device.write(":SYSTem:BEEPer 500, 1")
-        #print (mi_device.read()), "mi_device", mi_device            _WORKS!
-        #interactive_command_send_reciver(mi_device)
-        #print "checking ...", mi_device
-        #global mi_device
         return mi_device
+
     except:
         sys.exit("Measuring instrument is offline or command is wrong") # change to actual mi_device
-        #sys.exit()
+
 
 def interactive_command_send_reciver(mi_device):
     while True:
@@ -181,25 +173,19 @@ def interactive_command_send_reciver(mi_device):
 
 def mi_command_sender(mi_device, mi_command):
     # TODO implemenmt execution by time and cycle
-    #DC curretrnmeasurement command
-    # [SENSe:[1]]:FUNCtion[:ON]...
-    #print "Testing beep.."
-    #mi_device.write(":SYSTem:BEEPer 280, 0.5")
     if mi_command in "voltage":
         print "mi device", mi_device
         time.sleep(1)
         mi_device.write(("TRACe:MAKE '%s', 10000")%mi_command)
         time.sleep(1)
         cur_val = mi_device.query(("MEAS:DIG:VOLT? '%s'")%mi_command)
-        cur_val = float(cur_val)/1000000
+        cur_val = float(cur_val)/1000000 #Need more polished integers
         mi_device.write("*RST")
         # mi_device.query(":COUN %d"%cycle)
         #mi_device.query(":READ 'voltMeasBuffer_1'\n")
         # meas_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
         #time.sleep(3)
         #print "voltage buffer", votage_biuffer
-
-        #print "result buffer", result
 
     elif mi_command in "current":
         print "mi device", mi_device
@@ -209,52 +195,24 @@ def mi_command_sender(mi_device, mi_command):
         cur_val = mi_device.query(("MEAS:DIG:CURR? '%s'")%mi_command)
         cur_val = float(cur_val)/1000000
         mi_device.write("*RST")
-
+    else:
+        print "MI Command was not recognized"
 
     return cur_val
 
 
-'''
-class executor():
-    def __init__(self, adb_device):
-        self.initialize_adb_device()
-
-    def reset_dev(self):
-        executor.adb_device.write("*RST")
-        adb_device = "v"
-        return adb_device
-
-    def MI_write_to_buffer(self):
-        pass
-    def MI_read_from_buffer(self):
-        pass
-    def masurement_routine(self):
-
-        pass
-    def current_masuremtn_routine(self):
-        pass
-
-'''
-
-
-
-
-
-
 def adb_commandset_former(adb_command_set, adb_device):
-
-    #print "Got this command set", adb_command_set, adb_device
     """
     :param adb_device: device object
     :return: cap_command, fi_command, keep_files
     """
-    # add option if user want to keep captured images
+    # TODO add option if user want to keep captured images
     # command set data structure -('CAPTURE_TYPE', {'CAP_value_module': 'ALL', 'CAP_value_flash': 'ON', 'CAP_value_type'\
     # : 'SINGLE', 'CAP_value_torch': 'ON'})
     # implement lcc check in /data/ directory
 
     if adb_device and "LFC" in adb_device:
-        #first off compy lcc from /sys/etc/ to /data
+        #first of copy lcc from /sys/etc/ to /data
         #change lcc permission
         print "Copying lcc binary to correct spot..."
         adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
@@ -296,22 +254,25 @@ def adb_commandset_former(adb_command_set, adb_device):
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
+def plotting(iteration, values, mi_command):
+    pyplot.plot(iteration,values, "o-")
+    pyplot.ylabel(("%s"%mi_command))
+    pyplot.xlabel("Iterations")
+    pyplot.title(("Cyclic %s measuremnt "%mi_command))
+
+
 def main():
-
     command_set_dict = read_configurations()
-    # print command_set_dict
-
-    # Measuremetn device initialization
+    # Measurement device initialization
     try:
         mi_device = mi_resource_finder(command_set_dict)
         print "Measurement instrument name is: ", mi_device
     except:
-        raise
+        #raise
         mi_device.close()
         sys.exit("%s measuring instrument was not found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
 
     mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
-
     print "Measurement command is: ", mi_command
 
     # ADB device initialization
@@ -319,7 +280,8 @@ def main():
         adb_device = initialize_adb_device(command_set_dict)
         print "DUT name is: ", adb_device
     except:
-        raise
+        #raise
+        mi_device.close()
         sys.exit("No ADB device found, exiting..")
 
     number_of_cycles = command_set_dict["TEST_CYCLE"]["TC_value"]
@@ -327,32 +289,32 @@ def main():
 
     # ADB command set generation
     cap_command, fl_command, keep_files = adb_commandset_former(command_set_dict, adb_device)
-    print fl_command
     print "Capture command is %s, flash parameter %s, keep files? %s"%(cap_command, fl_command, keep_files)
 
     # Starting cycle here:
-    print "All set, starting to measure."
+    print "All set, starting measurement."
     if len(fl_command) > 0:
         adb_android.shell("/data/%s" % fl_command)
     if fl_command == 2:
         print "Turning toprch on"
         adb_android.shell("/data/%s" % fl_command)
     res_data_set = []
+    cycle_list = []
     for i in range(int(number_of_cycles)):
         print "Runing cycle number %d" % i
         if fl_command == "1":
             print "Turning flash will be used during capture"
             adb_android.shell("/data/%s" % fl_command)
         adb_android.shell("/data/%s" % cap_command)
-        #adb_android.shell("pwd")
-        #time.sleep(1)
-        #adb_android.shell(cap_command)
         cur_res = mi_command_sender(mi_device, mi_command)
         print "Current value", cur_res
         cur_res = (1000000*float(('{0:.8f}'.format(cur_res))))
         res_data_set.append(cur_res)
+        cycle_list.append(i)
         mi_device.write("*RST")
     mi_device.close()
+    plotting(cycle_list, res_data_set, mi_command)
+    pyplot.show()
     return "Measured values", res_data_set
 
 print main()
