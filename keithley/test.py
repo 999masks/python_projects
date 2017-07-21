@@ -1,13 +1,19 @@
-####### Power measurement tes automator     #######
-####### V0.1                                #######
-####### Author Mamo                         #######
+###### Power measurement tes automator                                      ######
+###### V0.11                                                                ######
+###### Chanages:                                                            ######
+###### 0.11 edited "IF" clauses to determine which devieces will cpature    ######
+###### Author Mamo                                                          ######
+
+import re
+import sys
+import time
+from scipy import pyplot
+from collections import defaultdict
+from adbandroid import adb_android, var
 
 import pyvisa
-import re
-from collections import defaultdict
-from adb_android import adb_android
-import time
-import sys
+
+from adbandroid import adb_android
 
 #TODO verufy chain function calls, invokes
 
@@ -15,6 +21,8 @@ import sys
 #TODO degugging
 #TODO add logging and timestasmp
 #TODO lover all config string to make case insesnsitive
+# TODO do plotting after done
+# TODO add gui
 '''
 user_sel_1 =raw_input("Please choose, how you want to setup the test, Press 1 for interactive, or 2 to use config file ")
 
@@ -46,6 +54,7 @@ command_set_dict ={'CONN_TYPE': {'CT_value': 'TCPIP'}, 'MEAUSUREMNT_TYPE': {'MT_
 # decided to read entire config file intead of line by line, because i would likr to separate config blocks
 
 def read_configurations(config_file_name="config.txt"):
+    # TODO issue with parsing flash command
     #seen issue where eror accesisng dictionary which not exist
     config_set =defaultdict(dict)
     config_file_data = open(config_file_name, "r").read()
@@ -77,6 +86,7 @@ def read_configurations(config_file_name="config.txt"):
 def initialize_adb_device(command_set_dict):
     devices_l = []
     try:
+        #adbandroid.stop_server()
         adb_android.start_server()
         raw_dev_list = adb_android.devices()[1]
         #print "Raw dev list", raw_dev_list
@@ -93,7 +103,7 @@ def initialize_adb_device(command_set_dict):
             if command_set_dict["DUT"]["DUT_value"] == "L16":
                 if "lfc" in devices.lower():
                     adb_device_obj = devices
-                    print "l16 selected, ID:", adb_device_obj
+                    #print "l16 selected, ID:", adb_device_obj
 
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
                 print "Not immplemented yet"
@@ -147,18 +157,16 @@ def mi_resource_finder(command_set_dict):
 
         #print mi_device
         #print (mi_device.write(":MEASure:CURRent:AC?")), "mi_device", mi_device #_WORKS!
-        # test command mi_dev.query(":SYSTem:BEEPer 500, 1")
+        print "Testing instrument, beeping.."
+        mi_device.write(":SYSTem:BEEPer 500, 1")
         #print (mi_device.read()), "mi_device", mi_device            _WORKS!
         #interactive_command_send_reciver(mi_device)
         #print "checking ...", mi_device
         #global mi_device
         return mi_device
     except:
-        print "Measuring instrument is offline or command is wrong" # change to actual mi_device
+        sys.exit("Measuring instrument is offline or command is wrong") # change to actual mi_device
         #sys.exit()
-
-
-
 
 def interactive_command_send_reciver(mi_device):
     while True:
@@ -184,7 +192,7 @@ def mi_command_sender(mi_device, mi_command):
         time.sleep(1)
         cur_val = mi_device.query(("MEAS:DIG:VOLT? '%s'")%mi_command)
         cur_val = float(cur_val)/1000000
-
+        mi_device.write("*RST")
         # mi_device.query(":COUN %d"%cycle)
         #mi_device.query(":READ 'voltMeasBuffer_1'\n")
         # meas_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
@@ -192,8 +200,18 @@ def mi_command_sender(mi_device, mi_command):
         #print "voltage buffer", votage_biuffer
 
         #print "result buffer", result
-        return cur_val
 
+    elif mi_command in "current":
+        print "mi device", mi_device
+        time.sleep(1)
+        mi_device.write(("TRACe:MAKE '%s', 10000")%mi_command)
+        time.sleep(1)
+        cur_val = mi_device.query(("MEAS:DIG:CURR? '%s'")%mi_command)
+        cur_val = float(cur_val)/1000000
+        mi_device.write("*RST")
+
+
+    return cur_val
 
 
 '''
@@ -223,55 +241,63 @@ class executor():
 
 
 
-def adb_commandset_former(adb_command_set,adb_device):
+def adb_commandset_former(adb_command_set, adb_device):
 
-    print "Got this command set", adb_command_set
+    #print "Got this command set", adb_command_set, adb_device
     """
     :param adb_device: device object
     :return: cap_command, fi_command, keep_files
-
     """
     # add option if user want to keep captured images
     # command set data structure -('CAPTURE_TYPE', {'CAP_value_module': 'ALL', 'CAP_value_flash': 'ON', 'CAP_value_type'\
     # : 'SINGLE', 'CAP_value_torch': 'ON'})
     # implement lcc check in /data/ directory
 
-    if adb_device and adb_device is "L16":
+    if adb_device and "LFC" in adb_device:
         #first off compy lcc from /sys/etc/ to /data
         #change lcc permission
         print "Copying lcc binary to correct spot..."
         adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
+        print "LCC successfully copied"
         adb_commands = adb_command_set["CAPTURE_TYPE"]
-        print "Got this", adb_commands, "sets of commands"
-        for ct_item in adb_commands[1].items():
-            print "Ct item", ct_item
+        #print "Got this", adb_commands, "sets of commands"
+        for ct_item in adb_commands.items():
             if "CT_value_flash_led" in ct_item[0]:
                 if ct_item[1]=="2":
                     torch =True
-                    print "Torch will be on", ct_item[1]
-                    fl_command = "./lcc -m 0 -s 0 -w -p 00 00 54 02 02 00 00 00 00"
+                    print "Torch will be on. Switch possition: ", ct_item[1]
+                    fl_command = "lcc -m 0 -s 0 -w -p 00 00 54 02 02 00 00 00 00"
                 elif ct_item[1]=="1":
-                    print "Flash wiilbe on", ct_item[1]
-                    fl_command = "#./lcc -m 0 -s 0 -w -p 00 00 54 02 31 DC 05 DC 05 0A 00"
+                    print "Flash will be on. Switch possition", ct_item[1]
+                    fl_command = "lcc -m 0 -s 0 -w -p 00 00 54 02 31 DC 05 DC 05 0A 00"
                 else:
                     fl_command = ""
                     print "Flash LED wil not be used", ct_item[1]
             if "CT_value_module" in ct_item[0]:
-                if ct_item[1] == "BC":
-                    cap_command = "./lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
-                    print "Wil use B,C modules", ct_item[1]
-            #TODO add other capture combinations
+                if ct_item[1] == "ALL":
+                    cap_command = "lcc -m 0 -s 0 -f 1 01 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+                elif ct_item[1] == "AB":
+                    cap_command = "lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000"
+                elif ct_item[1] == "BC":
+                    cap_command = "lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+
+            # TODO add other capture combinations
+            # TODO add ccb reboot, off options
             if "CT_value_keep_files" in ct_item[0]:
                 if "YES" in ct_item[1]:
                     keep_files= True
                     print "We will keep the files"
+        print "We will use %s module(s) for capture" % (adb_command_set["CAPTURE_TYPE"]["CT_value_module"])
         return(cap_command, fl_command, keep_files)
 
     else:
+        raise
+        mi_device.close()
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
 def main():
+
     command_set_dict = read_configurations()
     # print command_set_dict
 
@@ -280,12 +306,13 @@ def main():
         mi_device = mi_resource_finder(command_set_dict)
         print "Measurement instrument name is: ", mi_device
     except:
-        #raise
-        sys.exit("%s measuring instrument was found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
+        raise
+        mi_device.close()
+        sys.exit("%s measuring instrument was not found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
 
     mi_command = command_set_dict["MEAUSUREMNT_TYPE"]["MT_value"]
 
-    print "Measurement comand is: ", mi_command
+    print "Measurement command is: ", mi_command
 
     # ADB device initialization
     try:
@@ -300,27 +327,35 @@ def main():
 
     # ADB command set generation
     cap_command, fl_command, keep_files = adb_commandset_former(command_set_dict, adb_device)
+    print fl_command
     print "Capture command is %s, flash parameter %s, keep files? %s"%(cap_command, fl_command, keep_files)
 
     # Starting cycle here:
     print "All set, starting to measure."
     if len(fl_command) > 0:
-        adb_android.shell("cd /data; %s" % fl_command)
-
-    mi_device.write("*RST")
-    for i in range(number_of_cycles):
-        res_data_set = []
+        adb_android.shell("/data/%s" % fl_command)
+    if fl_command == 2:
+        print "Turning toprch on"
+        adb_android.shell("/data/%s" % fl_command)
+    res_data_set = []
+    for i in range(int(number_of_cycles)):
         print "Runing cycle number %d" % i
-        adb_android.shell(fl_command)
-        time.sleep(1)
-        adb_android.shell(cap_command)
+        if fl_command == "1":
+            print "Turning flash will be used during capture"
+            adb_android.shell("/data/%s" % fl_command)
+        adb_android.shell("/data/%s" % cap_command)
+        #adb_android.shell("pwd")
+        #time.sleep(1)
+        #adb_android.shell(cap_command)
         cur_res = mi_command_sender(mi_device, mi_command)
+        print "Current value", cur_res
+        cur_res = (1000000*float(('{0:.8f}'.format(cur_res))))
         res_data_set.append(cur_res)
+        mi_device.write("*RST")
+    mi_device.close()
+    return "Measured values", res_data_set
 
-
-
-
-main()
+print main()
 
 
 #read_configurations("config.txt")
