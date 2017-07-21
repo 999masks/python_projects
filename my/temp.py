@@ -21,3 +21,5 @@ def hammingWeight(n):
     return w
 
 print hammingWeight(-1)
+
+
