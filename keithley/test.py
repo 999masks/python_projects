@@ -87,7 +87,7 @@ def initialize_adb_device(command_set_dict):
         for devs in dev_list[1:]:
             if len(devs.split("\t")[0])>3:
                 devices_l.append(devs.split("\t")[0])
-        print "Found this devices: ", devices_l
+        #print "Found this devices: ", devices_l
 
         if len(devices_l) > 1:
             print "More than one ADB devices are exist"
@@ -173,29 +173,26 @@ def interactive_command_send_reciver(mi_device):
 
 def mi_command_sender(mi_device, mi_command):
     # TODO implemenmt execution by time and cycle
-    if mi_command in "voltage":
-        print "mi device", mi_device
-        time.sleep(1)
+    if mi_command in "power":
+        #print "mi device", mi_device
         mi_device.write(("TRACe:MAKE '%s', 10000")%mi_command)
         time.sleep(1)
         cur_val = mi_device.query(("MEAS:DIG:VOLT? '%s'")%mi_command)
         cur_val = float(cur_val)/1000000 #Need more polished integers
+        mi_device.write("*RST")
+    elif mi_command in "current":
+        mi_device.write(("TRACe:MAKE '%s', 10000") % mi_command)
+        time.sleep(1)
+        cur_val = mi_device.query(("MEAS:DIG:CURR? '%s'") % mi_command)
+        cur_val = float(cur_val) / 1000000  # Need more polished integers
         mi_device.write("*RST")
         # mi_device.query(":COUN %d"%cycle)
         #mi_device.query(":READ 'voltMeasBuffer_1'\n")
         # meas_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
         #time.sleep(3)
         #print "voltage buffer", votage_biuffer
-
-    elif mi_command in "current":
-        print "mi device", mi_device
-        time.sleep(1)
-        mi_device.write(("TRACe:MAKE '%s', 10000")%mi_command)
-        time.sleep(1)
-        cur_val = mi_device.query(("MEAS:DIG:CURR? '%s'")%mi_command)
-        cur_val = float(cur_val)/1000000
-        mi_device.write("*RST")
     else:
+        raise
         print "MI Command was not recognized"
 
     return cur_val
@@ -238,6 +235,8 @@ def adb_commandset_former(adb_command_set, adb_device):
                     cap_command = "lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000"
                 elif ct_item[1] == "BC":
                     cap_command = "lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+                elif ct_item[1] == "A":
+                    cap_command = "/lcc -m 0 -s 0 -f 1 3E 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
 
             # TODO add other capture combinations
             # TODO add ccb reboot, off options
@@ -289,7 +288,7 @@ def main():
 
     # ADB command set generation
     cap_command, fl_command, keep_files = adb_commandset_former(command_set_dict, adb_device)
-    print "Capture command is %s, flash parameter %s, keep files? %s"%(cap_command, fl_command, keep_files)
+    #print "Capture command is %s, flash parameter %s, keep files? %s"%(cap_command, fl_command, keep_files)
 
     # Starting cycle here:
     print "All set, starting measurement."
@@ -300,14 +299,14 @@ def main():
         adb_android.shell("/data/%s" % fl_command)
     res_data_set = []
     cycle_list = []
-    for i in range(int(number_of_cycles)):
+    for i in range(1,int(number_of_cycles)+1):
         print "Runing cycle number %d" % i
         if fl_command == "1":
             print "Turning flash will be used during capture"
             adb_android.shell("/data/%s" % fl_command)
         adb_android.shell("/data/%s" % cap_command)
         cur_res = mi_command_sender(mi_device, mi_command)
-        print "Current value", cur_res
+        #print "Current value", cur_res
         cur_res = (1000000*float(('{0:.8f}'.format(cur_res))))
         res_data_set.append(cur_res)
         cycle_list.append(i)
