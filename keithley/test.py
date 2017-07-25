@@ -253,12 +253,14 @@ def adb_commandset_former(adb_command_set, adb_device):
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
-def plotting(iteration, values, mi_command):
+def plotting(iteration, values, mi_command, build_info =""):
     pyplot.plot(iteration,values, "o-")
     pyplot.ylabel(("%s"%mi_command))
     pyplot.xlabel("Iterations")
-    pyplot.title(("Cyclic %s measuremnt "%mi_command))
-
+    if len(build_info)>1:
+        pyplot.title(("Cyclic %s measuremnt, build version:%s"%(mi_command,build_info)))
+    else:
+        pyplot.title("Cyclic %s measuremnt, build version:%s" % mi_command)
 
 def main():
     command_set_dict = read_configurations()
@@ -292,6 +294,10 @@ def main():
 
     # Starting cycle here:
     print "All set, starting measurement."
+    if command_set_dict["DUT"]["DUT_build_info"] == "YES":
+        print "Getting build info"
+        build_info = str((adb_android.shell("getprop ro.build.version.incremental")[1]).split())
+        print build_info
     if len(fl_command) > 0:
         adb_android.shell("/data/%s" % fl_command)
     if fl_command == 2:
@@ -312,7 +318,7 @@ def main():
         cycle_list.append(i)
         mi_device.write("*RST")
     mi_device.close()
-    plotting(cycle_list, res_data_set, mi_command)
+    plotting(cycle_list, res_data_set, mi_command, build_info)
     pyplot.show()
     return "Measured values", res_data_set
 
