@@ -1,5 +1,9 @@
 #!/bin/sh
 echo "I will run this command:$0, number of captures:$1, initial delay: $2 and pause:$3"
+cd /system/etc/
+./prog_app.config -q
+
+echo "Asic reset done"
 
 iteration=$1
 start_delay=$2

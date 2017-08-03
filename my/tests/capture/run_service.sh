@@ -1,0 +1,1 @@
+adb shell "am start light.co.lightcamera/light.co.camera.CameraActivity"
