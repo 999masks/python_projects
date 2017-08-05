@@ -2,7 +2,9 @@
 ###### V0.11                                                                ######
 ###### Chanages:                                                            ######
 ###### 0.13 edited "IF" clauses to determine which devieces will cpature    ######
+###### 0.14 added build number version info                                 ######
 ###### Author Mamo                                                          ######
+
 
 import re
 import sys
@@ -11,6 +13,7 @@ import pyvisa
 from matplotlib import pyplot
 from collections import defaultdict
 from adbandroid import adb_android, var
+from subprocess import call
 
 
 # TODO verify chain function calls, invokes
@@ -78,10 +81,14 @@ def read_configurations(config_file_name="config.txt"):
 
 
 def initialize_adb_device(command_set_dict):
+    # TODO kill light app during initialization
     devices_l = []
     try:
-        #adbandroid.stop_server()
+        #adb_android.kill_server()
+        #time.sleep(1)
         adb_android.start_server()
+        ret_val = call("adb root")#adb android doint have adb.root, we used shell invoke
+        time.sleep(3)
         raw_dev_list = adb_android.devices()[1]
         dev_list = raw_dev_list.split("\n")
         for devs in dev_list[1:]:
@@ -96,6 +103,14 @@ def initialize_adb_device(command_set_dict):
         for devices in devices_l:
             if command_set_dict["DUT"]["DUT_value"] == "L16":
                 if "lfc" in devices.lower():
+                    print "Resetting Asics"
+                    adb_android.shell("cd /data/; ./prog_app_v02 -q")
+                    time.sleep(1)
+                    # first of copy lcc from /sys/etc/ to /data
+                    # change lcc permission
+                    print "Copying lcc binary to correct spot..."
+                    adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
+                    print "LCC successfully copied"
                     adb_device_obj = devices
                     #print "l16 selected, ID:", adb_device_obj
             elif command_set_dict["DUT"]["DUT_value"] == "HMD":
@@ -106,7 +121,7 @@ def initialize_adb_device(command_set_dict):
                     print "emulator was selected, ID:", adb_device_obj
         return adb_device_obj
     except:
-        #raise
+        raise
         sys.exit("NO ADB DEVICE WAS FOUND. Exiting...")
 
 
@@ -153,7 +168,7 @@ def mi_resource_finder(command_set_dict):
         print "Resetting the instrument"
         mi_device.write("*RST")
         print "Testing the instrument, beeping.."
-        mi_device.write(":SYSTem:BEEPer 500, 1")
+        mi_device.write(":SYSTem:BEEPer 100, 1")
         return mi_device
 
     except:
@@ -164,10 +179,10 @@ def interactive_command_send_reciver(mi_device):
     while True:
         read_write = raw_input("DO you want read or write to MI? ")
         if read_write.lower() in "read":
-            command = raw_input("What you wont to send to read back ? ")
+            command = raw_input("What you want to send to read back ? ")
             print mi_device.read(command)
         elif read_write.lower() in "write":
-            command = raw_input("What you wont to send to write ? ")
+            command = raw_input("What you want to send to write ? ")
             print mi_device.write(command)
 
 
@@ -183,9 +198,11 @@ def mi_command_sender(mi_device, mi_command):
     elif mi_command in "current":
         mi_device.write(("TRACe:MAKE '%s', 10000") % mi_command)
         time.sleep(1)
-        cur_val = mi_device.query(("MEAS:DIG:CURR? '%s'") % mi_command)
-        cur_val = float(cur_val) / 1000000  # Need more polished integers
-        mi_device.write("*RST")
+        #cur_val = mi_device.query(("MEAS:DIG:CURR? '%s'") % mi_command)
+        mi_device.write("CURR:RANGE 10")
+        cur_val = mi_device.query(("TRACe:STAT:MAXimum? '%s'")%mi_command)
+        cur_val = float(cur_val)/ 1000000  # Need more polished integers
+        #mi_device.write("*RST")
         # mi_device.query(":COUN %d"%cycle)
         #mi_device.query(":READ 'voltMeasBuffer_1'\n")
         # meas_data.append(mi_device.query(":TRAC:DATA? 1, 10, 'voltMeasBuffer'"))
@@ -209,11 +226,7 @@ def adb_commandset_former(adb_command_set, adb_device):
     # implement lcc check in /data/ directory
 
     if adb_device and "LFC" in adb_device:
-        #first of copy lcc from /sys/etc/ to /data
-        #change lcc permission
-        print "Copying lcc binary to correct spot..."
-        adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
-        print "LCC successfully copied"
+
         adb_commands = adb_command_set["CAPTURE_TYPE"]
         #print "Got this", adb_commands, "sets of commands"
         for ct_item in adb_commands.items():
@@ -253,14 +266,14 @@ def adb_commandset_former(adb_command_set, adb_device):
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
-def plotting(iteration, values, mi_command, build_info =""):
+def plotting(iteration, values, mi_command, adb_device, build_info =""):
     pyplot.plot(iteration,values, "o-")
     pyplot.ylabel(("%s"%mi_command))
     pyplot.xlabel("Iterations")
     if len(build_info)>1:
-        pyplot.title(("Cyclic %s measuremnt, build version:%s"%(mi_command,build_info)))
+        pyplot.title(("Cyclic %s measurement, build version: %s\n Unit serial is: %s "%(mi_command, build_info, adb_device)))
     else:
-        pyplot.title("Cyclic %s measuremnt, build version:%s" % mi_command)
+        pyplot.title("Cyclic %s measurement, Unit serial  %s" % (mi_command, adb_device))
 
 def main():
     command_set_dict = read_configurations()
@@ -269,7 +282,7 @@ def main():
         mi_device = mi_resource_finder(command_set_dict)
         print "Measurement instrument name is: ", mi_device
     except:
-        #raise
+        raise
         mi_device.close()
         sys.exit("%s measuring instrument was not found, exiting ..."%(command_set_dict["MEASURING_INSTRUMET"]["MI_model"]))
 
@@ -281,7 +294,7 @@ def main():
         adb_device = initialize_adb_device(command_set_dict)
         print "DUT name is: ", adb_device
     except:
-        #raise
+        raise
         mi_device.close()
         sys.exit("No ADB device found, exiting..")
 
@@ -318,7 +331,7 @@ def main():
         cycle_list.append(i)
         mi_device.write("*RST")
     mi_device.close()
-    plotting(cycle_list, res_data_set, mi_command, build_info)
+    plotting(cycle_list, res_data_set, mi_command, adb_device, build_info)
     pyplot.show()
     return "Measured values", res_data_set
 
