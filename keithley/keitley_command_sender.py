@@ -1,6 +1,14 @@
 import visa
 import time
+from Tkinter import Tk, Label, Button
+window = Tk()
+label = Label(window, "Test result")
+window.title = "Cyclic Test"
+label.pack()
+b_enter = Button(text="Start", command=main)
 
+#TODO move to buttom of code
+window.mainloop()
 rs=visa.ResourceManager()
 print rs.list_resources()
 

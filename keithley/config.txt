@@ -15,12 +15,13 @@
 #*MEASURING_INSTRUMET*#
 ###specify measuring instruments an IP.###
 #-*MI_model=DMM775*-#
-#-*MI_IP=10.0.100.27*-#
+#-*MI_IP=10.0.100.25*-#
+##
 
 #*TEST_CYCLE*#
 ###specify test cycles. Continious or 1-100 ###
 #-*TC_value=contitious*-#
-#-*TC_value=1*-#
+#-*TC_value=6*-#
 
 #*MEAUSUREMNT_TYPE*#
 ###specify test type. Values voltage, power, current, resistane###
@@ -28,7 +29,7 @@
 
 #*CAPTURE_TYPE*#
 ###specify capture type. Values CT_value_module:A/B/C; AB; AC; BC; ALL. Flash_led: "1" flash on, "2" torch on, "3" all off###
-#-*CT_value_module=AB*-#
+#-*CT_value_module=A*-#
 #-*CT_value_flash_led=2*-#
 #-*CT_value_keep_files=YES*-#
 #-*CT_value_ccb_reboot=YES*-#

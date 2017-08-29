@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import Tk
 import numpy as np
 
 from matplotlib.figure import Figure
@@ -12,7 +12,7 @@ def myplotcode():
 
     return fig
 
-class mygui(Tk.Frame):
+class mygui(Tk.frame):
     def __init__(self, parent):
         Tk.Frame.__init__(self, parent)
         self.parent = parent

@@ -11,6 +11,21 @@ import pyvisa
 from matplotlib import pyplot
 from collections import defaultdict
 from adbandroid import adb_android, var
+import visa
+import time
+from Tkinter import Tk, Label, Button
+
+############## GUI code ###########################
+window = Tk()
+label = Label(window, "Test result")
+window.title = "Cyclic Test"
+label.pack()
+
+
+#TODO move to buttom of code
+b_enter = Button(text="Start", command=main)
+b_enter.pack()
+window.mainloop()
 
 
 # TODO verify chain function calls, invokes
