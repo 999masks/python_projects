@@ -13,19 +13,52 @@ from collections import defaultdict
 from adbandroid import adb_android, var
 import visa
 import time
-from Tkinter import Tk, Label, Button
+
+from Tkinter import Frame, Button
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+matplotlib.use("TkAgg")
+import Tkinter as tk
+
+global res_data_set
+global cycle_list
+
+res_data_set = []
+cycle_list = []
+
+#from Tkinter import Tk, Label, Button
 
 ############## GUI code ###########################
-window = Tk()
-label = Label(window, "Test result")
-window.title = "Cyclic Test"
-label.pack()
+
+class measure_gui(Frame):
+
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.pack()
+        self.init_val = 1
+        self.but = Button(master, text="Run", command=main)
+        self.but.pack()
+        self.but = Button(master, text="Show plot", command=self.execut)
+        self.but.pack()
+        self.but = Button(master, text="Reset", command=self.reset)
+        self.but.pack()
+
+    def execut(self):
+        f = matplotlib.figure.Figure(figsize=(5, 5), dpi=100)
+        a = f.add_subplot(111)
+        a.plot(cycle_list, res_data_set)
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.show()
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+    def reset(self):
+        cycle_list = []
+        res_data_set = []
 
 
-#TODO move to buttom of code
-b_enter = Button(text="Start", command=main)
-b_enter.pack()
-window.mainloop()
 
 
 # TODO verify chain function calls, invokes
@@ -64,7 +97,7 @@ command_set_dict ={'CONN_TYPE': {'CT_value': 'TCPIP'}, 'MEAUSUREMNT_TYPE': {'MT_
                     '2TT_value': 'w_flash', '1TT_value': 'capture_all'}, 'TEST_CYCLE': {'TC_value': 'contitious'}}
 '''
 
-# decided to read entire config file intead of line by line, because i would likr to separate config blocks
+# reading entire config file intead of line by line, to separate config blocks
 
 def read_configurations(config_file_name="config.txt"):
     """
@@ -90,40 +123,6 @@ def read_configurations(config_file_name="config.txt"):
             config_set[match_conf_header][match_conf_argument]=match_conf_arg_value
 
     return (dict(config_set))
-
-
-def initialize_adb_device(command_set_dict):
-    devices_l = []
-    try:
-        #adbandroid.stop_server()
-        adb_android.start_server()
-        raw_dev_list = adb_android.devices()[1]
-        dev_list = raw_dev_list.split("\n")
-        for devs in dev_list[1:]:
-            if len(devs.split("\t")[0])>3:
-                devices_l.append(devs.split("\t")[0])
-        #print "Found this devices: ", devices_l
-
-        if len(devices_l) > 1:
-            print "More than one ADB devices are exist"
-
-        #TODO add other type of devices
-        for devices in devices_l:
-            if command_set_dict["DUT"]["DUT_value"] == "L16":
-                if "lfc" in devices.lower():
-                    adb_device_obj = devices
-                    #print "l16 selected, ID:", adb_device_obj
-            elif command_set_dict["DUT"]["DUT_value"] == "HMD":
-                print "Not immplemented yet"
-            elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
-                if "emulator" in devices.lower():
-                    adb_device_obj = devices
-                    print "emulator was selected, ID:", adb_device_obj
-        return adb_device_obj
-    except:
-        #raise
-        sys.exit("NO ADB DEVICE WAS FOUND. Exiting...")
-
 
 def mi_resource_finder(command_set_dict):
     """
@@ -168,11 +167,46 @@ def mi_resource_finder(command_set_dict):
         print "Resetting the instrument"
         mi_device.write("*RST")
         print "Testing the instrument, beeping.."
-        mi_device.write(":SYSTem:BEEPer 500, 1")
+        #mi_device.write(":SYSTem:BEEPer 500, 1")
         return mi_device
-
     except:
         sys.exit("Measuring instrument is offline or command is wrong") # change to actual mi_device
+
+def initialize_adb_device(command_set_dict):
+    devices_l = []
+    try:
+        #adbandroid.stop_server()
+        adb_android.start_server()
+        raw_dev_list = adb_android.devices()[1]
+        dev_list = raw_dev_list.split("\n")
+        for devs in dev_list[1:]:
+            if len(devs.split("\t")[0])>3:
+                devices_l.append(devs.split("\t")[0])
+        #print "Found this devices: ", devices_l
+
+        if len(devices_l) > 1:
+            print "More than one ADB devices are exist"
+
+        #TODO add other type of devices
+        for devices in devices_l:
+            if command_set_dict["DUT"]["DUT_value"] == "L16":
+                if "lfc" in devices.lower():
+                    adb_device_obj = devices
+                    #print "l16 selected, ID:", adb_device_obj
+            elif command_set_dict["DUT"]["DUT_value"] == "HMD":
+                print "Not immplemented yet"
+            elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
+                if "emulator" in devices.lower():
+                    adb_device_obj = devices
+                    print "emulator was selected, ID:", adb_device_obj
+        return adb_device_obj
+    except:
+        #raise
+
+        sys.exit("NO ADB DEVICE WAS FOUND. Exiting...")
+
+
+
 
 
 def interactive_command_send_reciver(mi_device):
@@ -226,9 +260,11 @@ def adb_commandset_former(adb_command_set, adb_device):
     if adb_device and "LFC" in adb_device:
         #first of copy lcc from /sys/etc/ to /data
         #change lcc permission
-        print "Copying lcc binary to correct spot..."
-        adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")
-        print "LCC successfully copied"
+        print "Copying lcc binary to desired location"
+        if not "denied" in str(adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")):
+             print "LCC successfully copied"
+        else:
+            print "Error: Unable to copy LCC binary to desired location"
         adb_commands = adb_command_set["CAPTURE_TYPE"]
         #print "Got this", adb_commands, "sets of commands"
         for ct_item in adb_commands.items():
@@ -276,8 +312,13 @@ def plotting(iteration, values, mi_command, build_info =""):
         pyplot.title(("Cyclic %s measuremnt, build version:%s"%(mi_command,build_info)))
     else:
         pyplot.title("Cyclic %s measuremnt, build version:%s" % mi_command)
+    return pyplot
+
+
 
 def main():
+    global res_data_set
+    global cycle_list
     command_set_dict = read_configurations()
     # Measurement device initialization
     try:
@@ -298,7 +339,7 @@ def main():
     except:
         #raise
         mi_device.close()
-        sys.exit("No ADB device found, exiting..")
+        sys.exit("Cannot find any L16 connected to host, exiting..")
 
     number_of_cycles = command_set_dict["TEST_CYCLE"]["TC_value"]
     print "We will run test %s times"%number_of_cycles
@@ -318,8 +359,7 @@ def main():
     if fl_command == 2:
         print "Turning toprch on"
         adb_android.shell("/data/%s" % fl_command)
-    res_data_set = []
-    cycle_list = []
+
     for i in range(1,int(number_of_cycles)+1):
         print "Runing cycle number %d" % i
         if fl_command == "1":
@@ -332,12 +372,13 @@ def main():
         res_data_set.append(cur_res)
         cycle_list.append(i)
         mi_device.write("*RST")
+
     mi_device.close()
-    plotting(cycle_list, res_data_set, mi_command, build_info)
-    pyplot.show()
+    #plotting(cycle_list, res_data_set, mi_command, build_info)
+    #pyplot.show()
     return "Measured values", res_data_set
 
-print main()
+
 
 
 #read_configurations("config.txt")
@@ -361,5 +402,7 @@ print main()
 
 #my_dev =
 
-#if __name__== "main":
-#    main()
+if __name__== "__main__":
+    #print "Tkinter will start"
+    xxx= measure_gui().mainloop()
+
