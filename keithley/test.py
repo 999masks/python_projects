@@ -1,7 +1,7 @@
 ###### Power measurement tes automator                                      ######
 ###### V0.11                                                                ######
 ###### Chanages:                                                            ######
-###### 0.13 edited "IF" clauses to determine which devieces will cpature    ######
+###### 0.14 edited "IF" clauses to determine which devieces will cpature    ######
 ###### Author Mamo                                                          ######
 
 import re
@@ -13,6 +13,7 @@ from collections import defaultdict
 from adbandroid import adb_android, var
 import visa
 import time
+import thread
 
 from Tkinter import Frame, Button
 import matplotlib
@@ -20,17 +21,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 matplotlib.use("TkAgg")
 import Tkinter as tk
 
-global res_data_set
-global cycle_list
-
-res_data_set = []
-cycle_list = []
 
 #from Tkinter import Tk, Label, Button
 
 ############## GUI code ###########################
 
 class measure_gui(Frame):
+    res_data_set = []
+    cycle_list = []
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
@@ -46,7 +44,7 @@ class measure_gui(Frame):
     def execut(self):
         f = matplotlib.figure.Figure(figsize=(5, 5), dpi=100)
         a = f.add_subplot(111)
-        a.plot(cycle_list, res_data_set)
+        a.plot(self.cycle_list, self.res_data_set)
         canvas = FigureCanvasTkAgg(f, self)
         canvas.show()
         canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
@@ -173,6 +171,7 @@ def mi_resource_finder(command_set_dict):
         sys.exit("Measuring instrument is offline or command is wrong") # change to actual mi_device
 
 def initialize_adb_device(command_set_dict):
+    # TODO send ADB command explicitly to L16 by adb -s 'device name'
     devices_l = []
     try:
         #adbandroid.stop_server()
@@ -184,26 +183,31 @@ def initialize_adb_device(command_set_dict):
                 devices_l.append(devs.split("\t")[0])
         #print "Found this devices: ", devices_l
 
-        if len(devices_l) > 1:
-            print "More than one ADB devices are exist"
+        if len(devices_l) == 1:
+            #TODO add other type of devices
+            for devices in devices_l:
+                if command_set_dict["DUT"]["DUT_value"] == "L16":
+                    if "lfc" in devices.lower():
+                        adb_device_obj = devices
+                        #print "l16 selected, ID:", adb_device_obj
+                elif command_set_dict["DUT"]["DUT_value"] == "HMD":
+                    print "Not immplemented yet"
+                elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
+                    if "emulator" in devices.lower():
+                        adb_device_obj = devices
+                        print "emulator was selected, ID:", adb_device_obj
 
-        #TODO add other type of devices
-        for devices in devices_l:
-            if command_set_dict["DUT"]["DUT_value"] == "L16":
-                if "lfc" in devices.lower():
-                    adb_device_obj = devices
-                    #print "l16 selected, ID:", adb_device_obj
-            elif command_set_dict["DUT"]["DUT_value"] == "HMD":
-                print "Not immplemented yet"
-            elif command_set_dict["DUT"]["DUT_value"] == "emulator-5554":
-                if "emulator" in devices.lower():
-                    adb_device_obj = devices
-                    print "emulator was selected, ID:", adb_device_obj
+
+        elif len(devices_l) > 1:
+            print ("Error. More than one ADB devices are conected.")
+            thread.interrupt_main()
+
+
         return adb_device_obj
-    except:
-        #raise
 
-        sys.exit("NO ADB DEVICE WAS FOUND. Exiting...")
+    except:
+        #pass
+        sys.exit("Error while initializing an ADB device. Exiting...")
 
 
 
@@ -241,7 +245,7 @@ def mi_command_sender(mi_device, mi_command):
         #time.sleep(3)
         #print "voltage buffer", votage_biuffer
     else:
-        raise
+        #raise
         print "MI Command was not recognized"
 
     return cur_val
@@ -258,45 +262,54 @@ def adb_commandset_former(adb_command_set, adb_device):
     # implement lcc check in /data/ directory
 
     if adb_device and "LFC" in adb_device:
-        #first of copy lcc from /sys/etc/ to /data
-        #change lcc permission
-        print "Copying lcc binary to desired location"
-        if not "denied" in str(adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")):
-             print "LCC successfully copied"
-        else:
-            print "Error: Unable to copy LCC binary to desired location"
-        adb_commands = adb_command_set["CAPTURE_TYPE"]
-        #print "Got this", adb_commands, "sets of commands"
-        for ct_item in adb_commands.items():
-            if "CT_value_flash_led" in ct_item[0]:
-                if ct_item[1]=="2":
-                    torch =True
-                    print "Torch will be on. Switch possition: ", ct_item[1]
-                    fl_command = "lcc -m 0 -s 0 -w -p 00 00 54 02 02 00 00 00 00"
-                elif ct_item[1]=="1":
-                    print "Flash will be on. Switch possition", ct_item[1]
-                    fl_command = "lcc -m 0 -s 0 -w -p 00 00 54 02 31 DC 05 DC 05 0A 00"
-                else:
-                    fl_command = ""
-                    print "Flash LED wil not be used", ct_item[1]
-            if "CT_value_module" in ct_item[0]:
-                if ct_item[1] == "ALL":
-                    cap_command = "lcc -m 0 -s 0 -f 1 01 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
-                elif ct_item[1] == "AB":
-                    cap_command = "lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000"
-                elif ct_item[1] == "BC":
-                    cap_command = "lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
-                elif ct_item[1] == "A":
-                    cap_command = "/lcc -m 0 -s 0 -f 1 3E 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+        buid_info = str(adb_android.shell("getprop ro.build.version.incremental")[1]).split()
+        if "c" in buid_info[0].lower():
+            #first of copy lcc from /sys/etc/ to /data
+            #change lcc permission
+            print "Copying lcc binary to desired location"
+            if not "denied" in str(adb_android.shell("cp /etc/lcc /data/; chmod 777 /data/lcc")):
+                 print "LCC successfully copied"
+            else:
+                print "Error: Unable to copy LCC binary to desired location"
+            adb_commands = adb_command_set["CAPTURE_TYPE"]
+            #print "Got this", adb_commands, "sets of commands"
+            for ct_item in adb_commands.items():
+                if "CT_value_flash_led" in ct_item[0]:
+                    if ct_item[1]=="2":
+                        torch =True
+                        print "Torch will be on. Switch possition: ", ct_item[1]
+                        fl_command = "lcc -m 0 -s 0 -w -p 00 00 54 02 02 00 00 00 00"
+                    elif ct_item[1]=="1":
+                        print "Flash will be on. Switch possition", ct_item[1]
+                        fl_command = "lcc -m 0 -s 0 -w -p 00 00 54 02 31 DC 05 DC 05 0A 00"
+                    else:
+                        fl_command = ""
+                        print "Flash LED wil not be used", ct_item[1]
+                if "CT_value_module" in ct_item[0]:
+                    if ct_item[1] == "ALL":
+                        cap_command = "lcc -m 0 -s 0 -f 1 01 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+                    elif ct_item[1] == "AB":
+                        cap_command = "lcc -m 0 -s 0 -f 1 FE 07 00 11 21 00 -R 4160,3120 -g 7.75 -e 40000000"
+                    elif ct_item[1] == "BC":
+                        cap_command = "lcc -m 0 -s 0 -f 1 C0 FF 01 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
+                    elif ct_item[1] == "A":
+                        cap_command = "/lcc -m 0 -s 0 -f 1 3E 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
 
-            # TODO add other capture combinations
-            # TODO add ccb reboot, off options
-            if "CT_value_keep_files" in ct_item[0]:
-                if "YES" in ct_item[1]:
-                    keep_files= True
-                    print "We will keep the files"
+                # TODO add other capture combinations
+                # TODO add ccb reboot, off options
+                if "CT_value_keep_files" in ct_item[0]:
+                    if "YES" in ct_item[1]:
+                        keep_files= True
+                        print "We will keep the files"
+        elif "w" in buid_info[0].lower():
+            sys.exit("Device software packages not capatible to ruin this test")
+        else:
+            sys.exit("unknown error")
         print "We will use %s module(s) for capture" % (adb_command_set["CAPTURE_TYPE"]["CT_value_module"])
         return(cap_command, fl_command, keep_files)
+
+    elif adb_device and "emulator" in adb_device:
+        print adb_device
 
     else:
         raise
@@ -337,7 +350,7 @@ def main():
         adb_device = initialize_adb_device(command_set_dict)
         print "DUT name is: ", adb_device
     except:
-        #raise
+        raise
         mi_device.close()
         sys.exit("Cannot find any L16 connected to host, exiting..")
 
@@ -369,8 +382,8 @@ def main():
         cur_res = mi_command_sender(mi_device, mi_command)
         #print "Current value", cur_res
         cur_res = (1000000*float(('{0:.8f}'.format(cur_res))))
-        res_data_set.append(cur_res)
-        cycle_list.append(i)
+        measure_gui.res_data_set.append(cur_res)
+        measure_gui.cycle_list.append(i)
         mi_device.write("*RST")
 
     mi_device.close()

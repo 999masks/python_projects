@@ -8,13 +8,13 @@
 #-*CT_value=TCPIP*-#
 
 #*DUT*#
-###specify test cycles. Continious or 1-100 ###
+###specify test cycles, DUT type(L16, emulator-5554). Continious or 1-100 ###
 #-*DUT_value=L16*-#
 #-*DUT_build_info=YES*-#
 
 #*MEASURING_INSTRUMET*#
 ###specify measuring instruments an IP.###
-#-*MI_model=DMM775*-#
+#-*MI_model=@sim*-#
 #-*MI_IP=10.0.100.25*-#
 ##
 
