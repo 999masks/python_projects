@@ -38,7 +38,7 @@ class measure_gui(Frame):
         self.but.pack()
         self.but = Button(master, text="Show plot", command=self.execut)
         self.but.pack()
-        self.but = Button(master, text="Reset", command=self.reset)
+        self.but = Button(master, text="Reset/Rerun", command=self.reset)
         self.but.pack()
 
     def execut(self):
@@ -48,13 +48,15 @@ class measure_gui(Frame):
         canvas = FigureCanvasTkAgg(f, self)
         canvas.show()
         canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
+        ### Enable toolbar in case if needed
+        #toolbar = NavigationToolbar2TkAgg(canvas, self)
+        #toolbar.update()
         canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def reset(self):
-        cycle_list = []
-        res_data_set = []
+        self.cycle_list = []
+        self.res_data_set = []
+        main()
 
 
 
@@ -312,8 +314,7 @@ def adb_commandset_former(adb_command_set, adb_device):
         print adb_device
 
     else:
-        raise
-        mi_device.close()
+
         sys.exit("Cannot find L16 ADB device. Exiting...")
 
 
@@ -350,9 +351,9 @@ def main():
         adb_device = initialize_adb_device(command_set_dict)
         print "DUT name is: ", adb_device
     except:
-        raise
         mi_device.close()
-        sys.exit("Cannot find any L16 connected to host, exiting..")
+        sys.exit("Unable to find any L16 device conected to host. Exiting..")
+
 
     number_of_cycles = command_set_dict["TEST_CYCLE"]["TC_value"]
     print "We will run test %s times"%number_of_cycles
