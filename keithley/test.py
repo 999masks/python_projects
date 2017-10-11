@@ -10,7 +10,7 @@ import time
 import pyvisa
 from matplotlib import pyplot
 from collections import defaultdict
-from adbandroid import adb_android, var
+from adbandroid import adb_android
 
 
 # TODO verify chain function calls, invokes

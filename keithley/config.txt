@@ -15,7 +15,9 @@
 #*MEASURING_INSTRUMET*#
 ###specify measuring instruments an IP.###
 #-*MI_model=DMM775*-#
+#-*MI_model=@sim*-#
 #-*MI_IP=10.0.100.27*-#
+
 
 #*TEST_CYCLE*#
 ###specify test cycles. Continious or 1-100 ###
