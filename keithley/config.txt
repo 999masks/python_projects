@@ -29,7 +29,7 @@
 #-*MT_value=power*-#
 
 #*CAPTURE_TYPE*#
-###specify capture type. Values CT_value_module:A/B/C; AB; AC; BC; ALL. Flash_led: "1" flash on, "2" torch on, "3" all off###
+###specify capture_LCC type. Values CT_value_module:A/B/C; AB; AC; BC; ALL. Flash_led: "1" flash on, "2" torch on, "3" all off###
 #-*CT_value_module=AB*-#
 #-*CT_value_flash_led=2*-#
 #-*CT_value_keep_files=YES*-#

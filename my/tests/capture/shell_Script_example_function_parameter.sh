@@ -1,5 +1,5 @@
 #!/bin/bash
-#echo "Please type number of captures, initial delay and pause after each capture"
+#echo "Please type number of captures, initial delay and pause after each capture_LCC"
 
 number=$1
 

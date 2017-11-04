@@ -113,8 +113,9 @@ class Toolbox:
         self.adb_comm_send("cp /system/etc/prog_app_p2 /data; chmod 777 /data/prog_app_p2")
         self.adb_comm_send("/data/prog_app_p2 -q")
 
-    def asic_debug_term(self):
-        pass
+    def device_reboot(self):
+        system("adb  reboot")
+
 
     def asic_flash(self, file_loc):
         # TODO browse file with specific name and extension
@@ -212,7 +213,11 @@ class Toolbox:
 
 
     def dump_hardware_info(self):
-        pass
+        #TODO change to sys prop
+        if self.connect:
+            info= adb_android.version()
+            print info
+            return info
 
 
 
@@ -229,10 +234,10 @@ class toolbox_gui:
 
     def __init__(self, master):
         self.master = master
-        master.title = "EE toolbox"
+        master.title("L16 Toolbox for EE ")
 
         self.label = Label(master, text=" Control buttons")
-        self.label.grid(columnspan =2, sticky=W)
+        self.label.grid(columnspan =2)
 
         self.enable_asic_logs_but = Button(master, text="Enable Asic logging",
                                            command=l16.enable_asic_logging)
@@ -242,6 +247,10 @@ class toolbox_gui:
         self.run_asic_debug_log = Button(master, text="Run terminals for Asic loging",
                                           command=Toolbox().asic_logging)
         self.run_asic_debug_log.grid(row=1, padx=10, pady=10, sticky=W)
+
+        self.reboot_device = Button(master, text="Device Reboot",
+                                         command=Toolbox().device_reboot)
+        self.reboot_device.grid(row=2, padx=10, pady=10, sticky=W)
 
         self.run_asic_reset = Button(master, text="Asic reset",
                                          command=Toolbox().asic_reset)
@@ -258,14 +267,14 @@ class toolbox_gui:
         self.title_keyword = Label(master, text = "Filter logs by keyword")
         self.title_keyword.grid(row=1, column = 2, padx=10)
 
-        self.keyword_filter = Entry(master, width = 10)
-        self.keyword_filter.grid(row=2, column=2)
+        self.keyword_filter = Entry(master)
+        self.keyword_filter.grid(row=2, column=2, sticky = "W")
 
 
         self.export_log = Button(master, text = "Export log files", command = lambda: None)
         self.export_log.grid(row =3, column = 2, padx = 10, pady=10)
 
-        self.current_value = StringVar(master, "No files")
+        self.current_value = StringVar(master, "No files have been selected")
         self.file_selected = Label(master, textvariable = self.current_value)
 
         self.file_selected.grid(row=6, column = 2)
@@ -274,7 +283,11 @@ class toolbox_gui:
 
         self.keyword= StringVar(master, "Nothing is filtering")
         self.keyword_label = Label(master, textvariable = self.keyword)
-        self.keyword_label.grid(row = 2, column = 6 )
+        self.keyword_label.grid(row = 2, column = 3, sticky = "E" )
+
+        self.system_info = Button(master, text="Retrieve system information",
+                                         command=Toolbox().dump_hardware_info)
+        self.system_info.grid(column = 5, row=1, padx=15, pady=10, sticky=W)
 
         master.bind("<Return>", lambda x: self.filter_by_keyword())
 

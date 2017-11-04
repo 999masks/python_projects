@@ -238,13 +238,13 @@ def adb_commandset_former(adb_command_set, adb_device):
                 elif ct_item[1] == "A":
                     cap_command = "/lcc -m 0 -s 0 -f 1 3E 00 00 11 21 00 -e 40000000 -g 2.0 -R 4160,3120"
 
-            # TODO add other capture combinations
+            # TODO add other capture_LCC combinations
             # TODO add ccb reboot, off options
             if "CT_value_keep_files" in ct_item[0]:
                 if "YES" in ct_item[1]:
                     keep_files= True
                     print "We will keep the files"
-        print "We will use %s module(s) for capture" % (adb_command_set["CAPTURE_TYPE"]["CT_value_module"])
+        print "We will use %s module(s) for capture_LCC" % (adb_command_set["CAPTURE_TYPE"]["CT_value_module"])
         return(cap_command, fl_command, keep_files)
 
     else:
@@ -308,7 +308,7 @@ def main():
     for i in range(1,int(number_of_cycles)+1):
         print "Runing cycle number %d" % i
         if fl_command == "1":
-            print "Turning flash will be used during capture"
+            print "Turning flash will be used during capture_LCC"
             adb_android.shell("/data/%s" % fl_command)
         adb_android.shell("/data/%s" % cap_command)
         cur_res = mi_command_sender(mi_device, mi_command)

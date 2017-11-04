@@ -1,0 +1,85 @@
+        """
+
+        #self.values = StringVar(master, "Please enter values")
+
+        #master.bind("<Return>", lambda x: self.get_iteration_values)
+
+
+        # def sel():
+        #     selection = "You selected the option " + str(self.var.get())
+        #     #label.config(text=selection)
+        #     print "This is the value", self.var.get()
+
+
+
+    #self.var = 1
+
+
+
+
+        # self.v.set("1")  # initialize
+        #
+        # Radiobutton(master, text="One", variable=self.v, value=1).pack(anchor=W)
+        # Radiobutton(master, text="Two", variable=self.v, value=2).pack(anchor=W)
+        #
+        # MODES = [("Time", "1"),("Number of iterations", "2")]
+
+
+
+        # for text, mode in MODES:
+        #     b = Radiobutton(master, text=text,
+        #                     variable=v, value=mode)
+        #     b.pack(anchor=W)
+        #
+        # print "type of run was set to", v
+
+        """
+
+
+
+        self.run_asic_debug_log = Button(master, text="Run terminals for Asic loging",
+                                          command=Toolbox().asic_logging)
+        self.run_asic_debug_log.grid(row=1, padx=10, pady=10, sticky=W)
+
+        self.reboot_device = Button(master, text="Device Reboot",
+                                         command=Toolbox().device_reboot)
+        self.reboot_device.grid(row=2, padx=10, pady=10, sticky=W)
+
+        self.run_asic_reset = Button(master, text="Asic reset",
+                                         command=Toolbox().asic_reset)
+        self.run_asic_reset.grid(row=3, padx=10, pady=10, sticky=W)
+
+        self.close_all_consoles = Button(master, text="Close consoles",
+                                         command=self.close_consoles)
+        self.close_all_consoles.grid(row=5,padx=10, pady=10, sticky=W)
+
+        self.asic_flash = Button(master, text="Flash firmware, please select the files",
+                                         command=self.browse_for_files)
+        self.asic_flash.grid(row=6, padx=10, pady=10, sticky=W)
+
+        self.title_keyword = Label(master, text = "Filter logs by keyword")
+        self.title_keyword.grid(row=1, column = 2, padx=10)
+
+
+
+
+        self.export_log = Button(master, text = "Export log files", command = lambda: None)
+        self.export_log.grid(row =3, column = 2, padx = 10, pady=10)
+
+        self.current_value = StringVar(master, "No files have been selected")
+        self.file_selected = Label(master, textvariable = self.current_value)
+
+        self.file_selected.grid(row=6, column = 2)
+        # TODO crate function to genrate separate button to each connected device
+        # TODO keep main window always on top
+
+        self.keyword= StringVar(master, "Nothing is filtering")
+        self.keyword_label = Label(master, textvariable = self.keyword)
+        self.keyword_label.grid(row = 2, column = 3, sticky = "E" )
+
+        self.system_info = Button(master, text="Retrieve system information",
+                                         command=Toolbox().dump_hardware_info)
+        self.system_info.grid(column = 5, row=1, padx=15, pady=10, sticky=W)
+
+        master.bind("<Return>", lambda x: self.filter_by_keyword())
+        """

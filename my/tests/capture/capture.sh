@@ -16,11 +16,11 @@ for ((i=1;i<=iteration;i++)) do
   adb shell chmod 777 /data/lcc
   adb shell "cd /data/; $focus"
   sleep 1    
-  echo "Doing capture number:" $i
+  echo "Doing capture_LCC number:" $i
   cd /data/; $capture_comm"
   #cd /data/; $capture_comm"  
   if [ $i -lt $iteration ]; then
-	echo "waiting for next capture for $capture_pause seconds"  
+	echo "waiting for next capture_LCC for $capture_pause seconds"
 	sleep $capture_pause
 	fi
 done

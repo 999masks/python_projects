@@ -26,11 +26,13 @@ class MyFirstGUI:
 	
 	def greet(self):
 		print("Greetings!")
+		print self.label.keys()
 	
 	def cycle_label_text(self, event):
 		self.label_index += 1
 		self.label_index %= len(self.LABEL_TEXT) # wrap around
 		self.label_text.set(self.LABEL_TEXT[self.label_index])
+		print "ghj", self.label.keys()
 
 
 root = Tk()

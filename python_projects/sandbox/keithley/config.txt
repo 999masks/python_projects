@@ -31,7 +31,7 @@
 #-*MT_value=voltage*-#
 
 #*CAPTURE_TYPE*#
-###specify capture type. Values CT_value_module:A/B/C; A,B; A,C; C,B; ALL.Flash_led: "1" flash on, "2" torch on, "3" all off###
+###specify capture_LCC type. Values CT_value_module:A/B/C; A,B; A,C; C,B; ALL.Flash_led: "1" flash on, "2" torch on, "3" all off###
 #-*CT_value_module=ALL*-#
 #-*CT_value_flash_led=1*-#
 #-*CT_value_keep_files=YES*-#
