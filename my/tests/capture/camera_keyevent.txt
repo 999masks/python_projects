@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "capture keyevent"
+
+adb shell am start light.co.lightcamera/light.co.camera.CameraActivity
+sleep 1
+
+	adb shell input keyevent 29
+	sleep 1
+	adb shell input keyevent 27
+done
