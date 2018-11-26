@@ -1596,7 +1596,7 @@ def integer_to_bin(nmb):
 	return rem_list
 	
 ( A + B ) * ( C + D ) * ( E + F )  -> **+AB+CD+EF
-A + B * C * R / ( K + Z )  ** E	 -> **BCR/+KZ**E+A 
+A + B * C * R / ( K + Z )  ** E	 -> +A**BCR/+KZ**E 
 	
 1. scan word 
 2. if find lef par, start adding operands to stack
@@ -1711,20 +1711,55 @@ def in_to_pref(word):
 		elif start or letters:
 			my_stack.push(new_sent[i])
 			
-		
-		
+# recursion book
+
+# sum of the list
+
+def sum_list(list, sum):	
+	if len(list) == 0:
+		return sum
+	else:
+		sum = sum + list.pop()
+		return sum_list(list, sum)
 		 
 			
 			
-	
+def sum_list(list):
+		if len(list) == 1:
+			return list[0]
+		else:
+			return list[0] + sum_list(list[1:])
 		
 		
 		
+def convert_int_to_any(integer, base):
+	string_repr = "0123456789ABCDEF"
+	if integer < base:
+		return string_repr[integer]
+	else:
+		return convert_int_to_any(integer // base, base) + string_repr[integer % base]
+
+# polyndrome checker algorithm recrusive
+0. no special cymbols included
+1. split sentence by spaces
+2. make new strng
+3. itereate over items
+4.1 if len of string is <= 1
+	return True
+4.2 else
+	4.2.1 if first char == last char
+		4.2.1.1 return to function call with sliced from front and back string
+	4.2.2 else
+			4.2.2.1 return Fals
 		
-		
-		
-		
-		
+def is_poly(sent):
+	if len(sent) <=1:
+		return True
+	else:		
+		if len(sent) > 1 and sent[0] == sent[-1]:
+			return is_poly[sent[1:-1]]
+		else:
+			return False
 		
 		
 		

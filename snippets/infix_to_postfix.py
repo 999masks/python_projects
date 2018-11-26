@@ -207,4 +207,16 @@ def in_to_pref(word):
 #wrd = "( A + B ) * C * R / ( K + Z ) ** E"
 wrd = "A + B * C * R / ( K + Z )  ** E"
 
-print in_to_pref(wrd)
+#print in_to_pref(wrd)
+
+
+def is_poly(sent):
+    if len(sent) <= 1:
+        return True
+    else:
+        if len(sent) > 1 and sent[0] == sent[-1]:
+            return is_poly(sent[1:-1])
+        else:
+            return False
+
+print is_poly("kayak")
