@@ -1,0 +1,1780 @@
+1. inpout list
+2. calculate lenght
+a3. create list of 0,0,0,0,0 
+3. create progression 1,2,3,..n 
+4. loop trough progression , thus represents average of data until that elenmenrt
+
+5.  calcculate average and record in 0 initialized list
+
+data = [1,2,3,4,5,6,7,8,9,10]
+
+def average(input_data):
+	lenght = len(input_data)
+	avg_list = [0]*lenght
+	
+
+	for i in range(lenght):
+		avg = (data[0] + data[i]) / i
+		avg_list[i] = avg
+	return avg_list
+	
+def prefix_agerage_2(S):
+	n = len(S)
+	A = [0] * n
+	for i in range(n):
+		A[i] = sum(S[0] : S[i+1])/i+1
+	return A
+	
+# calculate averag value for each time frame	
+	
+def prefix_average_3(S):
+	n = len(S)
+	A = [0] * n
+	total = 0
+	for i in range(n):
+		total +=S[i]
+		A[i] = total
+	return A
+	
+# function are sets are disjoint 	
+for a in A:
+	for b in B:
+		for c in C:
+			if a==b==c;
+				return True
+return False
+
+def is_values_unique(list_data):
+	for i in range(len(list_data)):
+		for j in range(i+1,  len(list_data)):
+			if list_data[i] == list_data[j]
+			return True 
+			
+# find duplicated after sorting
+def find_dupl(data_list):
+	tmp = range(1, len(data_list))
+	for i in tmp:
+		if data_list[i-1] ==data_list[i]
+			return True
+			
+
+class Progression:
+	def __init__(self, differettiator =1, start=0):
+		self._start = start
+		self._differentiator = differentiator
+	
+	
+	def _next_el_ind(self):
+		return self._start + 1
+
+	def find_next_el(self, _start):
+		return self._differentiator + _start 
+		
+		 
+
+			
+1. input array
+2. input taeget
+is ther any negative number
+si there any non interger, 
+1. can i sort
+solution 1 
+	1. loop trough list
+		2. pick first lest than 9 number
+		2.1 record index
+		3, continue rest to find 9-first number
+			if find recird indwe
+		
+
+
+def add_to(list_data, target_sum):
+			for i in list_data:
+				if i < target_sum:
+					ind_1 = list_data.index()
+					for b in list_data[ind_i:]:
+						if b + i ==  target_sum:
+							ind_2 = target_sum.index()
+							return ind_1, ind_2
+							
+							
+							
+
+input two strings
+reverse it
+make integers 
+add sum
+reverse sum
+format as linked list
+
+#question deos leng of elements equal
+#does separator is the same 
+a = "2 -> 4 -> 3"
+b = "5 -> 6 -> 4"
+
+def SCRATCH_sum_link_lins_elements(a, b):
+	a = a.split("->")
+	b = b.split("->")
+	a = a[::-1]
+	b.reverse()
+	print a, b
+	lst = list(reversed(range(len(a))))
+	new_list = []
+	for i in lst:
+		try:
+			tmp_sum = (int(a[i]) + int(b[i]))
+			if tmp_sum > 9:
+				new_list.insert(i,tmp_sum%10)
+				new_list.insert(i,1)
+			else:
+				new_list.append(tmp_sum)
+
+		except:
+			pass
+		print final_list
+
+
+# l1 = (3,4,5), l2 =(5,6,7)
+# can number be 2 sign? No
+
+	
+	
+def sum_link_lins_elements(l1, l2):
+	l1 = [::-1]
+	l2 = [::-1]
+	# generate 
+	num = 0
+	max_ = len(l1) - 1
+	for i in l1:
+		num = num + i*10**max_
+			_max -= 1
+	
+	
+	tmp_list = range(len(a))
+	for i in tmp_list
+	 
+class sum_num:
+	def __init__(self, l1, l2)
+		self.l1 = l1
+		self.l2 = l2
+		
+	def reverse(self, lst)	
+		return self.lst[::-1]
+
+	def gen_num(self, lst):
+		num = 0
+		for i in lst:
+			num = num + i*10**max_
+			_max -= 1
+		return num
+		
+	def summing(self, num1, num2)
+		return num1 + num2
+
+	def make_list(num):
+		new_lst = []
+		for i in str(num):
+			new_list.append(i)
+		return new_listp[::-1]
+	
+	def addup():
+		nm1 = self.reverse(self.l1)
+		nm2 = self.reverse(self.l2)
+		total = self.summing(self.gen_num(nm1),self.gen_num(nm2))
+		return make_list(total)
+		
+		
+		
+		
+		
+sum_link_lins_elements(a,b))
+		
+
+		
+# recursion
+def draf_eng_ruiler(lenght):
+	if lenght = 0
+		return done
+	else:
+		cr = lenght % 8:
+		if cr == 0:
+			print ("----i %d")% lenght // 8
+		else:
+			print ("-")		
+		draf_eng_ruller(lenght -1)
+		
+
+		
+1. from sorted list of number
+2. find mid pont
+3. define start and end points
+4. if mid is target return mid
+5. else return start, end -1
+
+def bin_search(lst, trg):	
+	mid = len(lst) // 2
+	if  lsd[mid] == trg:
+		return mid
+	elif trg > mid:
+		lst = lst[mid:]
+		return bin_search(lst, trg)
+	else:
+		lst = lst[:mid]
+		return bin_search(lst, trg )
+		
+## bin sum
+
+def bin_sum(lst, start, stop):
+	if start == stop:
+		return start
+	if 1 > len(lst) > 0:
+		return lst
+	else;
+		mid_ind = stop + start // 2		
+		return bin_sum(lst, start, mid_ind) + bin_sum(lst, mid_ind, stop)
+		
+# tic tac toe
+1. initialize array of two dimension with None
+2. initlize player a and b
+3. while locatiuon is empty or not win do
+4. assign array user a cordinates
+5, assignr array user b coordinates
+6. winning logic
+7. tmp_lst = range(3)
+8. inout data verification
+9. board filled verification and raise
+10. if winner is no none raise value error game done
+ # check by vertically
+ 
+ for i in x:  #  (0,1)
+	b  = 0 
+ 	 if i == y[b+1]:
+		b = b +2
+		if i == y[b]:
+			return i, b
+	
+# chek by horizontally
+ for i in y:
+	g = 0
+	if i == x[g+1]:
+		g = g+2
+		if i == x[g]:
+			if y[i] = X:
+				return i, b, A wins
+			else:
+				return i, b, B wins
+# check diafgonally
+
+ 0 0 0
+ 0 0 0
+ 0 0 0 
+ 
+if x[0]y[0] == x[1]y[1] == x[2]y[2]:
+	if x[1]y[1] = X:
+		print A wins
+	else:
+		print B wins
+elif x[0]y[2] = x[1]y[1] = x[2]y[0]   
+
+# linked stack implementation
+
+class LinkedStack:
+	class _Node:
+		__slots__ = "_elements", "_next"
+		def __init__(self, element, next):
+			self._element = element
+			self._next = next
+			
+	def __init__(self):
+		self._head = None
+		self._size = 0
+		
+	def __len__(self):
+		return self._size
+		
+	def is_empty(self):
+		return self._size == 0
+		
+	def push(self, e):
+		self._head = self._Noade(e, self._head)
+		self._size += 1
+		
+	def top(self):
+		if self.is_empty():
+			raise Empty("Stack is empty")
+		return self._head._element
+		
+	def pop(self):
+		
+		if self.is_empty():
+			raise Empty("Stack is empty")
+		answer = self._head._element
+		self._head = self._head._enxt
+		self._size -= 1
+		retur answer
+		
+# linked list class
+
+class Linked_list:
+	
+	class _Node:
+		def __init__(self, head, next)
+			self.head = head
+			self.next = next
+
+	def __init__(self, )
+		
+		
+		
+# longest substring without repeting chat
+str = "adsfasdgkjhkl"
+return len (asdgkjh)
+
+1. loop trough chars
+2. record new_char and index
+3. stop when char repeats 
+4. store last char index
+5. calculate lenght
+6. loop trhough second index 
+7. do #2-5
+8. if lengh > new_leng -replace
+
+data = dict()
+max_len = 0
+# data = {"a":0, "b" : 1} 
+def longest_sub(wrd):
+	if max_len > len(wrd):
+		return max_len
+	else:	
+		tmp_lst = range(len(wrd))
+		for i in tmp_lst:
+			if wrd[i] not in data.keys():
+				data[wrd[i]] == i
+			else:			
+				if max_len < len(data):
+					max_len = len(data)
+				data = {}
+			return longest_sub(wrd[1:])
+
+##########################################			
+class linekd_list:
+	#---------------Nested node class
+	class _Node:
+	__slots__ = "_element", "_next"
+	
+	def __init__(self, element, next):
+		self.elerment = element
+		self.next = next
+		
+	#-------stack nethods
+	
+	def __init__(self):
+		self._head = None
+		self._size = 0
+		
+	def __len__(self):
+		return self.size
+		
+	def is_empty(self):
+		return self._size == 0
+	
+	def push(self, new_node):
+		self._head = self._Node(new_node, self._head)
+		self._size +=1
+		
+
+	def top(self):
+		if _self.is_empty:
+			raise ValueError("Stack is empty")
+		return self._head._element
+		
+	def pop(self):
+		if.self.is_empty():
+			raise ValueError("Stack is empty")
+		answer = self._head._element
+		self._head = self._head._next
+		self._size -=1
+		return answer
+			
+	
+ class my_linked_list:
+		
+	class _Node:
+		__slot__ = "_element", "_next"	
+		def __init__(self, element, next):
+			self._element = element
+			self._next = next
+		
+	def __init__ (self):
+		self._head = None
+		self._size = 0
+	
+	def _is_empty(self):
+		return self._size == 0
+		
+	def pop(self):
+		if self._is_empty:
+			raise Error("Empty list")
+		answer = self._head._element
+		self._head = self._head._next
+		self._size -= 1
+		return answer
+		
+	def push(self, new_node)
+		self._head = _Node(new_node, self._head)
+		self._size += 1
+			
+	def _len(self):
+		return self._size
+		
+	def top(self):
+		return self._head_element
+##############################################
+
+class double_linked_list:
+	class _Node:
+		__slots__ = "_element", "_preview", "_next"
+		
+		def __init__(self, _element, _prev, _next):
+			self._element = _element
+			self._prev = _prev
+			self._next = _next
+			
+	def __init__(self):
+		self._header = _Node(None, None, None)
+		self._trailer = _Node(None, None, None)
+		self._header._next = self._trailer
+		self._trailer._prev = self._header
+		
+		
+######################################
+	
+	
+	l1_data = (2,4,3)
+	l2_data = (5,6,4)
+	
+	l1 = linked_list()
+	l2 = linked_list()
+	 
+	for i in range(len(l1_data)):
+		l1.push(l1_data[i])
+		l2.push(l2_data[i])
+		
+	l1_int = 0
+	l2_int = 0
+	expon = 0
+	while not (l1.is_empty and l2.is_empty):
+		l1_int = l1_int + (l1.pop * 10 **expon
+		l2_int = l2_int + (l2.pop) * 10 ** expon 
+		expon +=1
+	sum = l1_int + l2_int
+	l3 = linked_list()
+	
+	new_sum_str = str(sum)
+	for i in new_sum_str:
+		l3.push(i)
+		
+	
+	
+	# create linked list object
+	1. convert linked list to integer
+	1.1 pop links as head is least significant digit
+	1.2 create exponent 0 and add +1 on each pop , summarize
+	2. summ
+	3. converr sum to linked list
+	
+	
+"""
+1. loop trough string
+2. record first new charachte and possition 
+3. skip record until repetasif not in dict
+3. if repeeat reset slice list up to repeted charageteand recrd current char
+4. a = ["a", "r" ]
+"""
+
+def longest_sub(s):
+	data = []
+	new_data = []
+	
+	for i in range(len(s)):
+		if s[i] not in data:
+			data.append(s[i])
+			
+		elif len(new_data) < len(data):
+			new_data = data
+			slice_loc = data.index(s[i])
+			data = data[slice_loc + 1:]
+			data.append = s[i]
+	
+	if len(new_data) < len(data):
+		return data
+	else:
+		return new_data
+	
+	
+	
+	
+#################l  leet code # 4
+ 
+ 
+ nums1 = (2,3,4,5,6,8,9,12) 
+ nums2 = (6,7,8,9,20,22)
+find median of sorted arrays
+O(log(m+n))
+1. add on arra to secon one
+2. sort
+3 if len %2 == 0:
+	half = len / 2 
+	array[half] +  array[half+1] / 2
+	else:
+		len/half
+		
+def find_median(nums1, nums2):
+		array_total = nums1 + nums2
+		array_total.sort()
+		med_ind = array_total // 2
+		if len(array_total) % 2 == 0:
+			return array_total[med_ind-1} + array_total[med_ind]
+		else:
+			return arra_total[med_ind]	
+	
+	
+################################################
+# leetcode 5, 	
+find longestr polydromic substring with max lemght 1000
+
+# EX "ertbabadyu" -> aba or bab
+
+1. loop trough characters
+2.add chars to empty list
+3.	get signal if medium
+4. verify folowing character sequnce with reversed items in list
+
+def find_max_polyndrome(s):
+    max_pol = []
+	n = 1
+	while n < len(s) //2" 
+		for i in range(len(s)-n):
+			if s[i] == s[i+n]:
+				if n >= 4: # from here we need to check inner chars
+				    n_1 = 0
+					while n_1 < n/2 and s[i+n_1] == s[i+n-n_1]:
+						n_1 +=1
+						if n_1 == n/2 -1: # all nested char tested
+							max_pol.append(s[i:n)
+					max_pol.append(s[i], s[i+n])
+		n +=1
+			
+	
+	
+	
+################ insertion sort alg
+1. loop trough elements
+2. started from second element compare with previus elements 
+2.1 save curent posssition creatr another index to loop further
+3. ompare with currentpossiton -1 element unitil lowest one
+
+lsd = [7,2,4,1,7]
+
+def insertion(lst):
+	new_list = [0] * len(lst)
+	for i in range(1, len(lst)):		
+		
+		cur = tmp_lst[i]
+		while cur < tmp_lst[j]:
+			j +=1
+			
+### from book
+def insertion_sort(A):
+	for k in range(1, len(A)):
+		j = k
+		while j > 0 and A[j-1] > A[k]:
+			A[j] = A[j-1]
+		A[j] = A[k]
+		
+
+#copy
+def isertin_sort(A):
+	for i in range(1, len(A)):
+		j = i
+		while j > 0 and A[j-1] > A[k]:
+			A[j] = A[j -1]
+			j -=1
+		A[j] = A[k]
+			
+		
+	
+###############LINked list implement
+
+class link_list:
+	_stack = "_element", "_next" # initilizing initial space
+	class Node:  # basic node impolementation
+		def __init__(self, element, next):
+			self._element = element
+			self._next = next
+
+	def __init___(self, head, size):
+		self.head = None  # initializin ena emptu list
+		self.size = 0
+		
+	def push(self, new_element):
+		self._head = self._Node(new_element, self._head)
+		self._size +=1
+	
+	def size(self):
+		return self.size
+		
+	def isempty(self):
+		return self.size == 0
+		
+	def pop():
+		if self.isempty:
+			raise ValueError("Array is empty")
+		answer = self.head.element
+		self.head = self.head.next
+		self.size -= 1
+		return answer
+		
+
+		
+### COMMENTS
+1. push operation
+1.1 element (data holder) -> new_node (data)
+1.2 next -> None
+1.3 head -> NODE 
+2. 2 nd element (2 nd data holder)
+2. element -> new_node (data)
+2.1 next -> previus head
+2.3 new_head -> last node
+		
+ ## ### leedcoede # 6
+ write string zig zad patternt
+ 1. can number of rows be more than sting lenghs
+ 2. doeas distance betwee element need to be consistent
+ 3. do we expect any white space?
+ 4. can i put the out put string in list?
+ 
+ st = "PAHNAPLSIIGYIR"
+	
+pseudocode:
+## number of rows ea list s is not hardcoded
+
+1. crear list range of leng astring
+2 go trought string chars
+3. append each string to each list
+3 when reaches to desired max row,  add next string to previus list 
+4, while it reaches desired lenght keep adding charachter by +1 offset
+5. go to 3-4
+6. go t
+
+
+
+def zig_zag_strings(s, numRows)
+	numRows = numRows *2
+	tmp_list = range(len(s))
+	final_list = [[""] for i in range(numRows)]
+	max_row = numRows
+ 	for i in tmp_list:
+		if max_row%(numRows/2) == 1:
+			final_list[max_row%numRows].append[" "]
+		final_list[max_row%numRows].append[i]
+		max_row +=1
+	
+	
+	5,0,7,1,0,8
+	
+############ insertion sort  
+
+def ins_sort(s):
+	for i in range(1, len(s)):
+		cur = s[i]
+		j = i
+		while j > 0 and s[j-1] > cur:
+			s[j] = s[j-1]
+			j -=1
+		s[j] = cur
+			
+			
+############ merge sort
+s1 = [3,4,5,7]
+s2 = [4,8,9,12,25]
+S = []
+
+
+# pseudocode 
+1. create two index variables for s1 -> i and s2 -> j
+2. simultanously loop trough items in list
+3. compare each group s1[i] <=> s2[j] 
+4. from  group smallest one goes first in new list
+	if s1[i] >= s2[j]:
+		S.append(s2[j]):
+		j +=1
+		if s1[i] < s2[j]:
+			s.append(s1[i])
+			i +=1
+		else:
+			s.append(s2[j])
+			j +=1
+	else:
+		S.append(s1[i])
+		i +=1
+		if s2[j] < s1[i]:
+			s.append(s2[j])
+			j +=1
+		else:
+			s.append(s1[i])
+			i +=1
+
+5. compare nex item in group with oppisite list next item
+6. if it is smaler or equal put that item to S list  else put second itgem from S1
+7. go step 5
+	
+	
+	
+# in place quick search
+ def in_place_q_serach(S, a, b):
+	if a >=b:
+		return
+	a = left
+	b - 1 = right
+	pivot = S[b]
+	while left <= right:
+		while left <= right and S[left] < pivot:
+			right +=1
+		while left <= rigth  and povit < S[right]:
+			right -=1
+		if left <= right:
+			S[left], S[right] = S[right], S[left]
+			left, right = left + 1, right -1
+		
+	S[left], S[b] = S[b], S[left]
+	
+	in_place_q_serach(S, a, left -1)
+	in_place_q_serach(S, left +1, b)	
+ 	
+################################## problem solving anagram finder
+s1 = "abcd" 
+s2 = "d
+cab"
+# all leters inclusive 
+
+#### WE NEED 2 LOOPS TO GO TROUGH THE LISTS
+
+def an_finder(s1, s2):
+	match = 0
+	if len(s1) != len(s2):
+		return "Not match lenght"
+		
+	for i in range(len(s1)):
+		pos2 = 0
+		for b in s2:
+			if s1[i] == b:
+				match += 1
+	if match > 0:
+		return "got match"
+			
+		
+		
+		
+		
+		
+
+	pos1 = 0
+	
+	s2_lst = list(s2)
+	keep_going = True
+	while pos1 < len(s1) and not Foud:
+		if s1[pos1] == s2[pos2]:
+		
+		pos1 += 1
+		while True
+			pos2 +=1
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		pos2 = 0
+		if s1[pos1]  == s2_lst[pos2]:
+			pos1 += 1
+		else:
+			pos2 += 1
+		if pos1 == len(s1):
+			return "No match"
+		pos1 += 1
+
+		
+##########################################
+
+import timeit
+
+def get_(dic_):
+	a = randrange(len(dic_.items)):
+	return dic[a]
+		
+
+a_dic = {k: random.random() for k in range(100)}
+
+def set_(dic_):
+	a = randrange(len(dic_.items))
+	dic_[a] = "just_set:
+	
+t1 = Timer("get_()", "from __main__ import get_")
+print "get testt", t1.timeint(a_dic), "miliseconds"
+
+t2 = Timer("set_()", "from __main__ import set_")
+print "set test", t2.timeint(a_dic), "milseconds")
+		
+	
+##################### Stack #########################
+
+class stack: # not complete
+	__chain__ = "_element_", "_node_"
+	
+	class _node
+		def __init__(element, next):
+			self.element = element
+			self.next = next
+	
+	def __init__(self, new_element, next):
+		self.new_element = None
+		self.next = self.new_element
+		
+	def peek(self):
+	
+	def pop(self):
+	
+	def push(self):
+		
+		
+	
+	def size(self):
+		return _size
+		
+
+class stack_list:
+	def __int__(self, node):
+		self.stack = []
+		
+	def push(self, node):
+		self.stack.append(node)
+	
+	def peek(self):
+		return self.stack[-1]
+	
+	def pop(self):
+		return self.stack.d
+		
+(()()())
+
+)))))))))(((((((((((((
+
+()))
+()))))))))(((((((((
+
+int chak algorint
+1. loop trough items
+2.if item is parentesis if it is first occurenc and closing par break the test
+2.1
+
+def par_cheker(symbol):
+	par = "()"
+	s = Stack()
+	first_occur = False
+	for i in symbol:
+		if i == "(":
+			s.push(i)
+		elif i == ")" 
+			if s.isEmpty:
+				return "Not balanced"
+			else:
+				s.pop()
+
+# with while looop can be endlup shorter			
+
+def par_chehk_mult(word):
+	s = Stock
+	par_s = "({["
+	par_l = ")}]"	
+	
+	for i in range(len(word)):
+		if word[i] in par_s:
+			s.push(i)
+		elif not s.isEmpty()  and test_parents(word[i -1], word[i]):
+			s.pop()
+	if s.isEmpty():
+		return True
+	
+def test_parents(st, end):
+	par_s = "({["
+	par_l = ")}]"	
+	if par_s.index(st) == par_l.index(end):
+		return True
+	
+# tried use for where while is more efective
+def par_check_multi(word):
+	s = Stock
+	par_s = "({["
+	par_l = ")}]"	
+	i = 0
+	balanced = True # endup condition
+ 	while i < len(word) and balanced: # missed balanaced check
+		if word[i] in par_s:
+			s.push(word[i])
+		elif word[i] in par_i:
+			if s.isEmpty():
+				balanced = False
+			else:
+				top = s.pop()
+				if test_poarents(top, word[i]):
+					balanced = True
+		i += 1
+	if s.isEmpty() and balanced:
+		return True
+		
+################### binary_to_hex converterr#######################
+		
+def dec_to_bin_conv(number):
+	# import Stack mod
+	s = Stock()
+	bin = ""
+	while number > 0:
+		s.push(number %2 ) # this more idiomatic :)
+#		if number % 2 == 1: # USELESS
+#			s.push(1)		
+#		else:
+#			s.push(0)
+		number = number // 2
+	while not s.isEmpty():
+		bin = bin + str(s.pop())
+	return bin
+	
+	
+### universal converter ###########
+
+def univ_to_bin_conv(number, base):
+	# import Stack mod
+	s = Stock()
+	bin_dic = "0123456789ABCDEF"
+	bin = ""
+	while number > 0:
+		s.push(number % base ) # this more idiomatic :)
+		number = number // base
+	while not s.isEmpty():
+		bin = bin + bin_dic[str(s.pop())]
+	return bin
+
+############# INFIX -> PREFIX ->  POSTFIX
+
+A + B * C + D  -> ++A*BCD - > ABC*+D+
+(A + B) * (C + D) -> *+AB+CD -> AB+CD+*
+A * B + C * D -> +*AB*CD -> AB*CD*+
+A + B + C + D -> +++ABCD -> AB+C+D+
+	
+# (A + B) * C - (D - E) * (F + G) -> AB+C*DE-FG+*-
+# A * B  + C *D -> AB*CD*+
+1. create empty stack
+2. convert input string to list by split
+3. Scan toke list from left to right
+4. if token is operand append to out put list
+	EG:  (A + B) * C - (D - E) * (F + G).  -> "A"
+5. if left parentesis pusch to stack
+	EG: S.push("(")
+6. if right parentesis,  pop from stack until pop left parentesis
+	EG: S.pop("n") # any char until "("	
+7. append all pops to list AB+
+
+8. if token is operator,  ("+", "/", "*", "-") pop all aperators from, stack then push in to stack
+9. when scan is done , pop all remining operators and append to list 
+	
+def postfixEval(postfixExpr):
+    operandStack = Stack()
+    tokenList = postfixExpr.split()
+
+    for token in tokenList:
+        if token in "0123456789":
+            operandStack.push(int(token))
+        else:
+            operand2 = operandStack.pop()
+            operand1 = operandStack.pop()
+            result = doMath(token,operand1,operand2)
+            operandStack.push(result)
+    return operandStack.pop()
+
+def doMath(op, op1, op2):
+    if op == "*":
+        return op1 * op2
+    elif op == "/":
+        return op1 / op2
+    elif op == "+":
+        return op1 + op2
+    else:
+        return op1 - op2
+
+print(postfixEval('7 8 + 3 2 + /'))
+	
+	
+########## converting infix to posfix
+"(A + B) * C - (D - E) * (F + G)" -> AB+C*
+"A + B * C - D - E * F + G" ->BC*A+D-EF*-G+
+0. split the worf into tokens
+1. scan the characters
+2. if digits or alpha - add to list
+3. if l par add to stack
+4. if prior oper add to stack
+5. while close par not found, pop from stack add to list
+6. pop remining operators to list
+"""
+topToken = opStack.pop()
+while topToken != '(':
+	postfixList.append(topToken)
+	topToken = opStack.pop()
+
+"""
+## IMPORTANT LOOK the input
+
+
+# Depends on data it is single, two or more tha two the algorithm will change
+def in_pos_converter(word):
+	new_word = []
+	digits = "0123456789"
+	alpha = "ABCDEFGHJIKLMNOPQRSTUVWXYZ"
+	l_par = "({["
+	r_par = ")}]"
+	# need to make operators as key to call later accordingally!!! important
+	prior_dic = dic()
+	prior_dic["**"] = 0
+	prior_dic["/"] = 1
+	prior_dic["*"] = 1
+	prior_dic["-"] = 2
+	prior_dic ["+"] = 2
+	
+	s = Stack()
+	token_list = word.slpit()
+	for i in range(len(token_list):
+		item = token_list[i]
+		if item is in digits or item in alpha:
+			new_word.append(item)
+		elif item in l_par or in prior_dic.keys():
+			par_index = l_par.idex(item)
+			s.push(item)
+
+		elif token_list[i] in r_par:	
+		#if par_cheker(prev_par, item): 
+		# verify the current parentesis 
+			while not s.isEpmty() and prior_dic[s.peek()] >= prior_dic[item]:				
+				new_world.append(s.pop())
+			s.push(item)
+
+
+		else: # operators push
+			op_buf = []
+			op.insert(prior_dic[item])
+			s.push(item)
+				
+			elif item in prio
+			
+		
+	
+	
+def par_cheker(l_par, r_par):
+	l_par_list = "({["
+	r_par_list = ")}]"
+	if l_par_list.index(l_par) == r_par_list.index(r_par):
+		return True
+	else:
+		return False 
+	
+		
+		
+###########################
+QUEUE
+1. information about size
+2. method is empty
+3. enque to add new data
+4. dequeu to remove new data
+
+NODE specs
+1. its data
+2. its next element
+3. its previous element
+	
+	
+	
+		
+
+		
+class queue:
+	
+	class _Node:
+	
+		def __init__(self, element, prev, next):
+			self.element = element
+			self.prev = prev
+			self next = next
+	
+	def __init__(self, head, rear):
+		self.size = 0
+		self.front = None
+		self.rear = None
+	
+	def enqueue(self, element):
+		self.node = _Node(element, none, none)
+		self.size +=1
+		self.
+		
+				
+		
+############## student printer task problem
+output to printer
+1. there are 10 students
+2. 1-20 paper per student
+3. twice an hour
+
+input to printer 
+4. 10 page per minute draft or 5 pages per minute good quality
+
+fully laod request condition
+
+10*20*2	per hour 400 pages per hour
+		
+40/6 pages per minute
+
+last student wait time:
+if it consequtive 
+9*20*2 = 360 pages 
+36 minut wait time
+
+queue implememtaion
+
+1
+2
+3
+4
+5
+6 		--------------
+7		->->->->	          printer
+8       --------------
+9
+10
+OBJECTS:
+1. printer
+2. queue
+3. students -> wrong, task
+
+queue lenght 10
+		
+job task 1-20 paper -> random(1, 20)		
+each job time = job_task_paper/printer speed
+
+def printer_queque(stud_count, range_task, frequency)
+	q = Queue:
+	max_q_size = stud_count
+	task = randrange(1, range_task)
+	total_ time = 0 
+	
+	while size.q > 0 :
+		q.deque()
+		
+class printer:
+	def __init__(self, job):
+		self.timestamp  ################
+		self.job = job
+		
+		
+class print_queue:
+	def __ini__(self, print_request):
+		self.print_request = request
+		self.size = 0
+		
+		
+######## form web
+class Printer:
+	"""
+		printer properties:
+		 constants		
+		- print rate
+		- initial time -> 0
+		- current task -> none
+		methods
+		- is busy
+		- print -> start taks
+		- time calculation
+		
+	"""
+	
+	def __init__(self, ppm):
+		self.pagerate = ppm # main property of printer
+		self.currentTask = None # main property
+		self.timeReamaing = 0
+
+	def tick(self):
+		if currentTask != 0:
+			self.timeRemaining = timeRemaing - 1
+				if self.timeRemaining <= 0 :
+					self.currentTaks = None
+					
+	deb busy(self):
+		if self.currentTask != None:
+			return True
+		else:
+			return False
+		
+	def start_print(self, newtask):
+		self.currentTask = newtask
+		self.timeRemainig = newtask.getPages() * 60/self.pagerate
+ 		
+		
+		
+		
+import random
+
+class 	newtask_generator:
+	def __init__(self, time):
+		"""
+			propertes
+				job size 
+				
+		"""
+		self.timestamp = time
+		self.pages = random.randrange(1, 21)
+		
+	def getStamp(self):
+		return self.timestamp
+	
+	def getPages(self):
+		retunr self.pages
+	
+	def waitTime(self, currenttime):
+		return currenttime - self.timestamp
+		
+	
+
+	
+def simulation(numsecond, ppm_rate):
+	labprinter = Printer(ppm_rate) # instantiating printer with ppm rate
+	printQueue = Queue() # # instantiating que as printer QUeue
+	waittimes = []
+	
+	for currentsecond in range(numsecond):
+		
+		if newPrintTask(): # new task is available
+			task = newtask_generator(currentsecond) # create new task
+			printQueue.enque(task) 		 # add to queue task object contains just time with random pages
+		
+		if (not labprinter.busy()) and (not printQueue.isEmpty()):
+			nexttask = printerQueue.dequeue()
+			
+			waitingtimes.append(nexttask.waitTime(currentSecond))
+			labprinter.start_print(nexttask)
+			
+		labprinter.tick()
+		
+	averageWait = sum(waitingtimes)/len(waitinngtimes)
+	print ("Average wait %6.2f sec %3d tasks remaining."%(averageWait, printerQueeu.size()))
+
+
+def newPrintTask():
+	num = random.randrange(1, 181)
+	if num == 180:
+		return True
+	else
+		return False
+		
+for in range(10):
+	simulation(3600, 5)
+	
+# this program is based on the probibiltyu that in 3600 chance at least on time neWprinttask will hit 
+# 180 and return true otherwise program will throw 0 division error
+# oany hit time the queue gets created if num sec decerease to 230 sometime it will throw error		
+		
+		
+# ################ dequeue ##################
+
+class deque:
+
+	def __init__(self):
+		self.dequeue = list()
+
+	def add_rear(self, item):
+		self.dequeue.append(item)
+
+	def remove_rear(self):
+		if self.size() > 0:
+			return self.dequeue.pop()
+
+	def add_front(self, item):
+		self.dequeue.insert(0, item)
+
+	def remove_front(self):
+		if self.size() > 0:
+			return self.dequeue.pop(0)
+
+	def size(self):
+		return len(self.dequeue)
+
+	def isempty(self):
+		return self.size() == 0
+
+
+my = deque()
+
+
+		
+def is_polindrome(word):
+	new_deque = dequeue()
+	stop = False
+
+	for letters in word:
+		new_deque.add_front(letters.lower())
+
+	# while not new_deque.isempty() and not stop:
+	# 	if new_deque.size() > 1:  # if the size is 1 - cannot pop on both sides !!!
+	# 		if new_deque.remove_front() != new_deque.remove_rear():
+	# 			stop = True
+	# 		else:
+	# 			stop = False
+	# 	else:
+	# 		break
+
+	while not new_deque.isempty():
+		if new_deque.size() > 1:  # if the size is 1 - cannot pop on both sides !!!
+			if new_deque.remove_front() != new_deque.remove_rear():
+				return "not"
+
+		if new_deque.size() == 1 or new_deque.size() == 0 :
+			return "yes"
+	return "yers"
+
+	# if not stop:
+	# 	return "Yes polyndrome"
+	# else:
+	# 	return "Not poly"
+
+
+def is_polindrome(word): # book version
+	new_deque = dequeue()
+	keep_going = True
+
+	for letters in word:
+		new_deque.add_front(letters.lower())
+
+	while new_deque.size() > 1 and keep_going:
+		if new_deque.remove_front() != new_deque.remove_rear():
+			keep_going = False
+	
+	return  keep_going
+	
+
+print  is_polindrome("141")		
+		
+	
+		
+# THUGHTS
+# if 0 lenght it will return "yes"
+		
+################# LINKED list AGAIN BOOK
+class singly_link_list:
+	# reserving memory
+	__stack__ = "__head__", "__next__"
+
+	class _Node:
+		def __init__(self, element, next):
+			self._element = element
+			self._next = next
+
+	def __init__(self, _head):
+		self._head = None
+		self.size = 0
+		
+	def push(self, element):
+		self._head = _Node(element, self._head)
+		self.size += 1 
+	
+	def remove(item):
+		## assume we are in curernt node
+		privious = haed.prev()
+		current = head()
+		prevous.next = current.next_head
+		
+	
+	
+		
+def search_in_LL(keyword):
+	curret = LL.head
+	found = False
+	while current.next() != None and not Found:
+		if current.get_value == keyword:
+			found = True
+		else:
+			current = currennt.next()
+		
+	return found
+		
+############### unordered Lineked list book ####
+
+class Node:
+	def __init__(self, initdata):
+		self.data = initdata
+		self.next = None
+	
+	def getData(self):
+		return self.data_list
+	
+	def getNext(self):
+		return self.next
+	
+	def setData(self, newdata):
+		self.data = newdata
+		
+	def setNext(self, newnext):
+		self.next = newnext
+		
+class UnorderedList:
+	
+	def __init__(self):
+		self.head = None
+		self.last_node = None
+		
+	def add(self, data):
+		tmp_node = Node(data)
+		tmp_node.next(self.head)
+		self.head = tmp_node
+		if isEmpty:
+			self.last_node = tmp_node
+		
+	
+	def size(self):
+		current = self.head
+		size = 0
+		while current != None:
+			size +=1
+			current = current.getNext()
+		return count
+	
+	def isEmpty(self):
+		return self.head == None
+		
+	def search(self, data):
+		current = self.head
+		found = False
+		while current != None and not found:
+			if data == current.getData():
+				found = True
+			else:
+				current = current.getnext()
+		return found
+		
+	def remove(self, data):
+		current = self.head
+		previous = None
+		found = False
+		while current != None and not found:
+			if data == current.getData():
+				found = True
+			else:
+				previous = current				 
+				current = current.getnext()
+		
+		if found 
+			if previous not None:			
+				tmp_node = current
+				prevous.setNext = tmp_node.getNext()
+			else:
+				self.head = tmp_node.getNext()
+			
+	
+		
+		
+
+	def append_v1(self, data):
+		"""
+		1. go trough items
+		2. finm the last item
+		3. creat new node with data
+		4. next always none
+		5. last element next to this node
+		6. single node list issue
+		7. empty link list issue
+		8, alternative use size and loop to reach to end 
+			of the list
+		
+		"""
+		# v1
+		if not self.isEmpty():
+			new_node = Node(data)
+			current = self.head
+			next = self.head.getNext()
+			while next is not None:
+				current = current.getext()
+				next = current.getNext()
+			next = new_node
+		else:
+			self.head = new_node
+		#v2
+		
+	def append_v2(self, data):
+		counter = self.size()
+		tmp_node = Node(data)
+		if counter > 0:
+			current_node = self.head
+			while counter >= 0:
+				current_node = current_node.next()
+				counter -= 1 
+			curent_node.next = tmp_node
+		else:
+			self.head = tmp_node
+	
+	def append_v3(data):
+		tmp_ node = Node(data)
+		self.last_node.setNext(tmp_node)
+	
+	
+################ STACk implememtaion  
+
+class Node:
+	
+	def __init__(self, data):
+		self.data = data
+		
+		
+class Stack:
+	
+	def __init__(self):
+		self.head = None
+		self.next = None
+	
+	def push(self, item):
+		tmp = Node(item)
+		self.next = self.head
+		self.head = tmp
+	
+	def isempty(self) 	
+		pass
+		
+	def size(self):
+		pass
+		
+	def pop(self):
+		next_el = self.head.next
+		self.head = next
+		return 
+		
+##################### Stack implemettation list 
+
+class Stack_list:
+	
+	def __init__(self):
+		self.stack = []
+		
+	def push(self, item):
+		self.stack.insert(0, item)
+		
+	def pop()
+		return self.stack.pop(0)
+		
+	def isEmpty():
+		return len(self.stack) == 0
+		
+		
+1. add to stack modulo of original
+2. divide original to 2	
+
+EX 17%2 1, 17/2 = 8 8%2 0 8/2	
+		
+def integer_to_bin(nmb):
+	rem_list = Stack_list()
+	while nmb > 0:
+		remainder = nmb % 2
+		rem_list.push(remainder)
+		nmb =  (nmb - remainder)/2
+	return rem_list
+	
+( A + B ) * ( C + D ) * ( E + F )  -> **+AB+CD+EF
+A + B * C * R / ( K + Z )  ** E	 -> **BCR/+KZ**E+A 
+	
+1. scan word 
+2. if find lef par, start adding operands to stack
+		2.1. create empty list -> fianl_list
+		2.2 if operator add to list
+		2.3 if operand add to stack
+	3. if righ par, pop item from stack, until stack is empty
+	4. if stack is empty and operators add to list with priority
+	5. create dictianary with priority opetarators 	
+		operat = dic()
+		operat["**"] = 0
+		operat["*"] = 1
+		operat["/"] = 1
+		operat["+"] = 2
+		operat["-"] = 3
+
+3. 
+5. if final list is empty add operator, if not compare with priority if low insert if high append
+6 if no par 
+
+### V2
+
+1. scan thi item
+2. if operand put in the stack 
+3. elif operator compare with existing operands in the list
+	3.1 if existing operand none
+		3.1.1 add first operand
+	3.2  else
+		3.2.1 while existing openrad in list >= with current, insert current to the list
+4. if hit l_par 
+	4.1 if stack is not empty 
+		4.1.1 pop unitil empty	
+		4.1.2 add pops to list
+	4.2 else
+		4.2.1 do 2-3
+4.2 if hit r_par
+	4.2.1 while stack is not empty 
+		4.2.1.1 do 4.1.1-4.1.2
+	4.2.2 eles
+		4.2.2.1 throw error
+	
+		
+		
+		
+	
+def in_to_pref(word):
+	l_par = "(" 
+	r_par = ")"
+	my_stack = Stack_list()
+	final_list = []
+	start = False
+	operat = dic()
+	operat["**"] = 0
+	operat["*"] = 1
+	operat["/"] = 1
+	operat["+"] = 2
+	operat["-"] = 3
+	letters = "ABCRKZE"
+	new_word = word.split(" "):
+	for i in range(len(new_sent)):
+		item = new_word[i]
+		
+		if  item in letters:
+			my_stack.push(item)
+			
+		elif item in operat.keys():
+			if len(final_list) == 0:
+				final_list.append(item)
+			else:
+				i = len(final_list)  - 1
+				while i != 0 and final_list[i] in operat.keys():
+					if operat[item] <= operat[final_list[i]]:
+						final_list.insert(i, item)
+					else:
+						i -=1
+						break
+		
+		elif item == l_par:
+			if my_stack.isEmpty():
+				continue
+			else:
+				while not my_stack.isEmpty():
+					final_list.append(my_stack.pop())
+		
+		elif item == r_par:
+			while not my_stack.isEmpty():
+				final_list.append(my_stack.pop())
+	
+	return final_list 
+		
+		
+		
+		
+		
+		if i in operat.keys():
+			if len(final_list) == 0:
+				final_list.append(new_sent[i])
+			else:
+				if operat[final_list[-1]] <=  operat[new_sent[i]]:
+					final_list.append(new_sent[i])
+				else:
+					final_list.insert(0, new_sent[i])
+					
+		if new_sent[i] == l_par:
+			start = True	
+		
+		elif i == r_par:
+			start = False
+			while not my_stack.isEmpty:
+				final_list.append(my_stack.pop())
+			
+		elif start or letters:
+			my_stack.push(new_sent[i])
+			
+		
+		
+		 
+			
+			
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
