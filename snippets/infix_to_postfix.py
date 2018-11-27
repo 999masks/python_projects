@@ -219,4 +219,14 @@ def is_poly(sent):
         else:
             return False
 
-print is_poly("kayak")
+# print is_poly("kayak")
+
+def reverse_(sent):
+	new_sent = ""
+	i = -1
+	while i >= -len(sent):
+		new_sent = new_sent + (sent[i])
+		i -= 1
+	return new_sent
+
+print reverse_("home sweet house")
